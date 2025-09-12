@@ -1,0 +1,26 @@
+{
+  "name": "tp2_project",
+  "version": "1.0.0",
+  "description": "Proyecto de Taller de Programación 2",
+  "main": "index.js",
+"scripts": {
+  "dev": "npm run dev --workspace=@tp2/core",
+  "start": "npm run start --workspace=@tp2/core"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/constantinmitrokhin-dev/tp2_project.git"
+  },
+  "keywords": [],
+  "author": "Constantin Mitrokhin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/constantinmitrokhin-dev/tp2_project/issues"
+  },
+  "homepage": "https://github.com/constantinmitrokhin-dev/tp2_project#readme",
+  "private": true,
+  "workspaces": [
+    "bs/core",
+    "bs/inventory"
+  ]
+}
