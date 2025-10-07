@@ -20,6 +20,7 @@
   "homepage": "https://github.com/constantinmitrokhin-dev/tp2_project#readme",
   "private": true,
   "workspaces": [
+    "loader",
     "bs/core",
     "bs/inventory"
   ]

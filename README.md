@@ -21,13 +21,17 @@
 - **pgtools** (^1.0.1) → Herramientas auxiliares para la gestión de bases de datos PostgreSQL.
 - **sequelize** (^6.37.7) → ORM para trabajar con PostgreSQL mediante modelos en JavaScript.
 
-### ⚙️ Dependencias de desarrollo
+### Dependencias de desarrollo
 - **nodemon** (^3.1.10) → Reinicia automáticamente el servidor al detectar cambios en el código durante el desarrollo.
+
 ## Estructura del Proyecto
 
 ```
 TP2_PROJECT/
-├── bs/
+├── loader/             # Procesador de archivos y cargador de Base de Datos Inicial
+│   ├── data/               # Carpeta para alocar los archivos a procesar
+│   │   ├── images/             # Almacena las imágenes extraidas del 
+├── bs/                 # Build System
 │   ├── core/				# Módulo Central.
 │   │   ├── backend/			# Sub-Módulos DB.
 │   │   ├── frontend/			# Sub-Módulos UI.
