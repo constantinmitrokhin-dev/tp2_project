@@ -1,21 +1,30 @@
 
-require('dotenv').config();
-const { Sequelize } = require('sequelize');
-const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, DB_DIALECT, DB_PORT } = process.env;
+const fs = require('fs');
+const path = require('path');
+const { sequelize } = require('./sequelize.js');
+const { modelDefiners } = require('../models/models.js');
 
 
-const sequelize = new Sequelize(
-	DB_NAME, DB_USER, DB_PASSWORD,
-	{
-		host: DB_HOST,
-		dialect: DB_DIALECT,
-		port: DB_PORT,
-		logging: false,
-		native: false,
-	}
-);
+modelDefiners.forEach((model) => model(sequelize));
+// Capitalizamos los nombres de los modelos ie: product => Product
+const entries = Object.entries(sequelize.models);
+const capsEntries = entries.map((entry) => [
+	entry[0][0].toUpperCase() + entry[0].slice(1),
+	entry[1],
+]);
+sequelize.models = Object.fromEntries(capsEntries);
+
+
+const {
+	CoreObject
+} = sequelize.models;
+
+
+//! Relationships
+// No hay relaciones por el momento
 
 
 module.exports = {
-	sequelize
+	...sequelize.models,
+	conn: sequelize
 };
