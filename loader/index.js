@@ -2,8 +2,10 @@
 
 const FileFactory = require("./src/classes/FileFactory");
 const Product = require("./src/classes/Product");
+const Country = require("./src/classes/Country");
 const fs = require("fs");
 const path = require("path");
+
 
 // Establece el PATH de la carpeta de carga
 const DIRECTORY_NAME = "data";
@@ -16,9 +18,6 @@ function loader_find_relevant_files(beginsWith) {
 		(file.endsWith(".xlsx") || file.endsWith(".xls") || file.endsWith(".pdf") || file.endsWith(".csv")) && file.startsWith(beginsWith)
 	);
 }
-// const files = fs.readdirSync(DATA_FOLDER_PATH).filter((file) =>
-// 	file.endsWith(".xlsx") || file.endsWith(".xls") || file.endsWith(".pdf") || file.endsWith(".csv")
-// );
 
 
 // Sanitiza las líneas procesadas
@@ -105,25 +104,42 @@ async function loader_build_products_from_files() {
 }
 
 
-// loader_build_products_from_files(files)
-// 	.then(objs => {
-// 		console.log(objs.length);
-// 		console.log("-------------------------------------");
-// 	})
-// 	.catch(err => console.error(err));
+function loader_build_countries(countryList){
+	const countries = [];
+	for (let i = 0; i < countryList.length; i++) {
+		const e = countryList[i];
+		let country = new Country(e.name, e.iso3, e.iso2, e.currency, e.currency_name, e.currency_symbol, e.tld, e.phonecode);
+		countries.push(country);
+	}
+
+	return countries;
+}
 
 
-// (async () => {
-// 	const objs = await loader_build_products_from_files();
-// 	console.log(objs.length);
-// 	for (let i = 0; i < objs.length; i++) {
-// 		const element = objs[i];
-// 		console.log(element.toString);
-// 	}
-// 	console.log("-------------------------------------");
+async function loader_build_countries_from_files() {
+	let processedCountryList = [];
+	let initialCountryList;
+	const files = loader_find_relevant_files('countries');
+	if (files.length === 0) {
+		console.log("⚠️ No se encontraron archivos válidos para procesar en /list");
+		process.exit(0);
+	}
+	try {
+		for (let i = 0; i < files.length; i++) {
+			const element = files[i];
+			const e = FileFactory.create(`${DATA_FOLDER_PATH}\\${element}`)
+			initialCountryList = await e.sheetToJSON();
+			processedCountryList = [...processedCountryList, ...loader_build_countries(initialCountryList)];
+		}
+	} catch (e) {
+		console.error(e.message);
+	}
 
-// })();
+	return processedCountryList;
+}
+
 
 module.exports = {
-	loader_build_products_from_files
+	loader_build_products_from_files,
+	loader_build_countries_from_files
 };

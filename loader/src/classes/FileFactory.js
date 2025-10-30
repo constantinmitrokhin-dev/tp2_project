@@ -1,6 +1,6 @@
 
 const path = require("path");
-// const CsvFile = require("./CsvFile");
+const CsvFile = require("./CsvFile");
 const ExcelFile = require("./ExcelFile");
 // const PdfFile = require("./PdfFile");
 
@@ -10,8 +10,8 @@ class FileFactory {
 		const ext = path.extname(fullFilePath).toLowerCase();
 
 		switch (ext) {
-			// case ".csv":
-			// 	return new CsvFile(fullFilePath);
+			case ".csv":
+				return new CsvFile(fullFilePath);
 			case ".xls":
 			case ".xlsx":
 				return new ExcelFile(fullFilePath);
