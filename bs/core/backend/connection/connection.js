@@ -17,5 +17,5 @@ const sequelize = new Sequelize(
 
 
 module.exports = {
-	conn: sequelize
+	sequelize
 };
