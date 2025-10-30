@@ -20,6 +20,7 @@
 - **pg-hstore** (^2.3.4) → Serializador para almacenar objetos JavaScript en PostgreSQL (tipo HSTORE).
 - **pgtools** (^1.0.1) → Herramientas auxiliares para la gestión de bases de datos PostgreSQL.
 - **sequelize** (^6.37.7) → ORM para trabajar con PostgreSQL mediante modelos en JavaScript.
+- **@sequelize/core** (^7.0.0-alpha.47) → Herramienta para agregar funcionalidad adicional al Sequelize.
 
 ### Dependencias de desarrollo
 - **nodemon** (^3.1.10) → Reinicia automáticamente el servidor al detectar cambios en el código durante el desarrollo.

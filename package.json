@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Proyecto de Taller de Programación 2",
   "main": "index.js",
-"scripts": {
-  "dev": "npm run dev --workspace=@tp2/core",
-  "start": "npm run start --workspace=@tp2/core"
-},
+  "scripts": {
+    "dev": "npm run dev --workspace=@tp2/core",
+    "start": "npm run start --workspace=@tp2/core"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/constantinmitrokhin-dev/tp2_project.git"
