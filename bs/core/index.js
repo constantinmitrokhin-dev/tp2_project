@@ -4,7 +4,7 @@ const server = require("./backend/server.js");
 const { conn } = require("./backend/connection/connection.js");
 const { ensureDatabase } = require("./backend/connection/utiles.js");
 const PORT = process.env.PORT;
-const { loader_build_products_from_files } = require("../../loader/index.js");
+const { loader_build_products_from_files, loader_build_countries_from_files } = require("../../loader/index.js");
 
 
 async function startServer() {
@@ -21,6 +21,11 @@ async function startServer() {
 		// TODO: Queda pendiente procesar los productos y agregarlos a la DB.
 		// FIXME: Procesarlo en seeds
 		console.log(products)
+
+		const countries = await loader_build_countries_from_files();
+		// TODO: Queda pendiente procesar los países y agregarlos a la DB.
+		// FIXME: Procesarlo en seeds
+		console.log(countries)
 	} catch (err) {
 		console.error("❌ Error starting server:", err);
 	}
