@@ -11,9 +11,9 @@ const DATA_FOLDER_PATH = path.join(__dirname, DIRECTORY_NAME);
 
 
 // Buscar todos los archivos Excel / PDF / CSV en la carpeta
-function loader_find_relevant_files() {
+function loader_find_relevant_files(beginsWith) {
 	return fs.readdirSync(DATA_FOLDER_PATH).filter((file) =>
-		file.endsWith(".xlsx") || file.endsWith(".xls") || file.endsWith(".pdf") || file.endsWith(".csv")
+		(file.endsWith(".xlsx") || file.endsWith(".xls") || file.endsWith(".pdf") || file.endsWith(".csv")) && file.startsWith(beginsWith)
 	);
 }
 // const files = fs.readdirSync(DATA_FOLDER_PATH).filter((file) =>
@@ -73,7 +73,7 @@ function loader_build_products(productList){
 async function loader_build_products_from_files() {
 	let processedProductList = [];
 	let initialProductList;
-	const files = loader_find_relevant_files();
+	const files = loader_find_relevant_files('products');
 	if (files.length === 0) {
 		console.log("⚠️ No se encontraron archivos válidos para procesar en /list");
 		process.exit(0);

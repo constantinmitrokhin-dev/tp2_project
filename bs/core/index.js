@@ -20,7 +20,7 @@ async function startServer() {
 		const products = await loader_build_products_from_files();
 		// TODO: Queda pendiente procesar los productos y agregarlos a la DB.
 		// FIXME: Procesarlo en seeds
-		// console.log(products)
+		console.log(products)
 	} catch (err) {
 		console.error("❌ Error starting server:", err);
 	}
