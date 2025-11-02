@@ -1,24 +1,20 @@
 
-const fs = require('fs');
-const path = require('path');
+const CoreObject = require('./core_object');
+const CoreCountry = require('./core_country');
 
 
-const basename = path.basename(__filename);
-const modelsDir = __dirname;
-const modelDefiners = [];
+async function defineModels(sequelize, DataTypes) {
+		// Definir todos los modelos aquí
+		await CoreObject.initModel(sequelize, DataTypes);
+		await CoreCountry.initModel(sequelize, DataTypes);
 
+		CoreObject.hasOne(CoreCountry, { foreignKey: 'id' });
+		CoreCountry.belongsTo(CoreObject, { foreignKey: 'id' });
 
-// Leemos todos los archivos de la carpeta Models, los requerimos y agregamos al arreglo modelDefiners
-fs.readdirSync(modelsDir)
-	.filter(
-		(file) =>
-			file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
-	)
-	.forEach((file) => {
-		modelDefiners.push(require(path.join(modelsDir, file)));
-	});
+}
 
 
 module.exports = {
-	modelDefiners
+	defineModels
 };
+

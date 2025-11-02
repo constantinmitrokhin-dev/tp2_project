@@ -1,30 +1,42 @@
 
 const fs = require('fs');
 const path = require('path');
-const { sequelize } = require('./sequelize.js');
-const { modelDefiners } = require('../models/models.js');
+const { defineModels } = require('../models/models.js');
 
 
-modelDefiners.forEach((model) => model(sequelize));
-// Capitalizamos los nombres de los modelos ie: product => Product
-const entries = Object.entries(sequelize.models);
-const capsEntries = entries.map((entry) => [
-	entry[0][0].toUpperCase() + entry[0].slice(1),
-	entry[1],
-]);
-sequelize.models = Object.fromEntries(capsEntries);
+async function initializeDatabase(sequelize) {
+	try {
+		const queriesPath = path.join(__dirname, '..', 'models', 'queries', 'queries.sql');
+		if (fs.existsSync(queriesPath)) {
+			const sql = fs.readFileSync(queriesPath, 'utf8');
+			try {
+				await sequelize.query(sql);
+				console.log('queries.sql executed');
+			} catch (err) {
+				// Ignorar tipo ya existe (42710) u otros errores idempotentes
+				const code = err && err.parent && err.parent.code;
+				if (code === '42710') {
+					console.warn('Warning: los Custom DataTYPEs ya han sido creados - continuando');
+				} else {
+					throw err;
+				}
+			}
+		}
 
+		// ahora inicializar modelos
+		await defineModels(sequelize, require('sequelize').DataTypes);
 
-const {
-	CoreObject
-} = sequelize.models;
+		// sincronizar modelos con la base de datos
+		await sequelize.sync({ force: true/*, alter: true*/ });
 
-
-//! Relationships
-// No hay relaciones por el momento
+		return true;
+	} catch (error) {
+		console.error('Error initializing database:', error);
+		throw error;
+	}
+}
 
 
 module.exports = {
-	...sequelize.models,
-	conn: sequelize
+	initializeDatabase
 };
