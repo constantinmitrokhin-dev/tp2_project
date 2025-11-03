@@ -6,12 +6,12 @@ const { defineModels } = require('../models/models.js');
 
 async function initializeDatabase(sequelize) {
 	try {
-		const queriesPath = path.join(__dirname, '..', 'models', 'queries', 'queries.sql');
+		const queriesPath = path.join(__dirname, '..', 'models', 'queries', 'types.sql');
 		if (fs.existsSync(queriesPath)) {
 			const sql = fs.readFileSync(queriesPath, 'utf8');
 			try {
 				await sequelize.query(sql);
-				console.log('queries.sql executed');
+				console.log('types.sql executed');
 			} catch (err) {
 				// Ignorar tipo ya existe (42710) u otros errores idempotentes
 				const code = err && err.parent && err.parent.code;
