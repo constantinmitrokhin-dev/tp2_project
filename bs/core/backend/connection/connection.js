@@ -24,7 +24,7 @@ async function initializeDatabase(sequelize) {
 		}
 
 		// ahora inicializar modelos
-		await defineModels(sequelize, require('sequelize').DataTypes);
+		sequelize.models = await defineModels(sequelize, require('sequelize').DataTypes);
 
 		// sincronizar modelos con la base de datos
 		await sequelize.sync({ force: true/*, alter: true*/ });
