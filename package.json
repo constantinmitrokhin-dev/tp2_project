@@ -23,5 +23,11 @@
     "loader",
     "bs/core",
     "bs/inventory"
-  ]
+  ],
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "pg": "^8.16.3",
+    "sequelize": "^6.37.7",
+    "uuid": "^13.0.0"
+  }
 }
