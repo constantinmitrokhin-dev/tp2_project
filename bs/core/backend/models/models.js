@@ -3,14 +3,16 @@ const CoreObject = require('./core_object');
 const CoreCountry = require('./core_country');
 const CoreType = require('./core_type');
 const CoreBusiness = require('./core_business');
+const CoreBusinessLocation = require('./core_business_location');
 
 
-async function defineModels(sequelize, DataTypes) {
+async function core_mod_define_models(sequelize, DataTypes) {
 	// 1. Inicializar todos los modelos primero
 	CoreObject.initModel(sequelize, DataTypes);
 	CoreCountry.initModel(sequelize, DataTypes);
 	CoreType.initModel(sequelize, DataTypes);
 	CoreBusiness.initModel(sequelize, DataTypes);
+	CoreBusinessLocation.initModel(sequelize, DataTypes);
 
 	// 2. Definir relaciones de herencia (uno a uno, mismo id)
 	CoreObject.hasOne(CoreCountry, { foreignKey: 'id', as: 'country' });
@@ -22,9 +24,15 @@ async function defineModels(sequelize, DataTypes) {
 	CoreObject.hasOne(CoreBusiness, { foreignKey: 'id', as: 'business' });
 	CoreBusiness.belongsTo(CoreObject, { foreignKey: 'id', as: 'coreObject' });
 
+	CoreObject.hasOne(CoreBusinessLocation, { foreignKey: 'id', as: 'businessLocation' });
+	CoreBusinessLocation.belongsTo(CoreObject, { foreignKey: 'id', as: 'coreObject' });
+
 	// 3. Relaciones adicionales del diagrama
 	CoreBusiness.belongsTo(CoreCountry, { foreignKey: 'country_id', as: 'country' });
 	CoreCountry.hasMany(CoreBusiness, { foreignKey: 'country_id', as: 'businesses' });
+
+	CoreBusiness.hasMany(CoreBusinessLocation, { foreignKey: 'business_id', as: 'locations' });
+	CoreBusinessLocation.belongsTo(CoreBusiness, { foreignKey: 'business_id', as: 'business' });
 
 	// 4. Retornar modelos
 	return {
@@ -32,8 +40,9 @@ async function defineModels(sequelize, DataTypes) {
 		CoreCountry,
 		CoreType,
 		CoreBusiness,
+		CoreBusinessLocation,
 	};
 }
 
 
-module.exports = { defineModels };
+module.exports = { core_mod_define_models };
