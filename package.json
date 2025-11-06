@@ -23,5 +23,8 @@
     "loader",
     "bs/core",
     "bs/inventory"
-  ]
+  ],
+  "devDependencies": {
+    "sequelize-cli": "^6.6.3"
+  }
 }
