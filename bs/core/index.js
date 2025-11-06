@@ -1,10 +1,10 @@
 
 require('dotenv').config();
-const server = require("./backend/server.js");
-const { sequelize } = require("./backend/connection/sequelize.js");
-const { core_conn_initialize_database } = require("./backend/connection/connection.js");
-const { core_conn_ensure_database } = require("./backend/connection/utiles.js");
-const seeds = require("./backend/seeds/seeds.js");
+const server = require('./backend/server.js');
+const { sequelize } = require('./backend/connection/sequelize.js');
+const { core_conn_initialize_database } = require('./backend/connection/connection.js');
+const { core_conn_ensure_database } = require('./backend/connection/utiles.js');
+const seeds = require('./backend/seeds/seeds.js');
 const PORT = process.env.PORT;
 
 

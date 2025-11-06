@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon --env-file .env index.js"
   },
   "keywords": [],
   "author": "Constantin Mitrokhin",
   "license": "ISC",
   "dependencies": {
     "@sequelize/core": "^7.0.0-alpha.47",
+    "bcryptjs": "^3.0.3",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

@@ -31,7 +31,7 @@ async function core_mod_define_models(sequelize, DataTypes) {
 	CoreBusiness.belongsTo(CoreCountry, { foreignKey: 'country_id', as: 'country' });
 	CoreCountry.hasMany(CoreBusiness, { foreignKey: 'country_id', as: 'businesses' });
 
-	CoreBusiness.hasMany(CoreBusinessLocation, { foreignKey: 'business_id', as: 'locations' });
+	CoreBusiness.hasOne(CoreBusinessLocation, { foreignKey: 'business_id', as: 'locations' });
 	CoreBusinessLocation.belongsTo(CoreBusiness, { foreignKey: 'business_id', as: 'business' });
 
 	// 4. Retornar modelos
