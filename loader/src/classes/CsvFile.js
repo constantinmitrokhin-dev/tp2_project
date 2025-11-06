@@ -1,8 +1,8 @@
 
-const FileList = require("./FileList");
-const fs = require("fs");
-const path = require("path");
-const { parse } = require("csv-parse/sync");
+const FileList = require('./FileList');
+const fs = require('fs');
+const path = require('path');
+const { parse } = require('csv-parse/sync');
 
 class CsvFile extends FileList {
 	constructor(fullFilePath) {
@@ -10,7 +10,7 @@ class CsvFile extends FileList {
 	}
 
 	async sheetToJSON() {
-		const csvContent = await fs.promises.readFile(this.filePath, "utf8");
+		const csvContent = await fs.promises.readFile(this.filePath, 'utf8');
 
 		const records = parse(csvContent, {
 			columns: true,

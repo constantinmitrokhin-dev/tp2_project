@@ -1,9 +1,9 @@
 
-const FileList = require("./FileList");
-const fs = require("fs");
-const xlsx = require("xlsx");
-const unzipper = require("unzipper");
-const path = require("path");
+const FileList = require('./FileList');
+const fs = require('fs');
+const xlsx = require('xlsx');
+const unzipper = require('unzipper');
+const path = require('path');
 
 class ExcelFile extends FileList{
 	constructor(fullFilePath){
@@ -19,16 +19,16 @@ class ExcelFile extends FileList{
 	}
 
 	async  extractExcelImages(){
-		const OUTPUT_DIR = path.join(__dirname, "..", "..", "data", "images");
+		const OUTPUT_DIR = path.join(__dirname, '..', '..', 'data', 'images');
 		if (!fs.existsSync(OUTPUT_DIR)) {
 			fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 		}
 		await fs.createReadStream(this.filePath)
 			.pipe(unzipper.Parse())
-			.on("entry", function (entry) {
+			.on('entry', function (entry) {
 			const fileName = entry.path;
-			if (fileName.startsWith("xl/media/")) {
-				const outPath = `${OUTPUT_DIR}/${fileName.replace("xl/media/", "")}`;
+			if (fileName.startsWith('xl/media/')) {
+				const outPath = `${OUTPUT_DIR}/${fileName.replace('xl/media/', '')}`;
 				entry.pipe(fs.createWriteStream(outPath));
 			} else {
 				entry.autodrain();

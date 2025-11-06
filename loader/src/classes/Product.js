@@ -1,5 +1,5 @@
 
-const Category = require("./Category");
+const Category = require('./Category');
 
 class Product extends Category{
 	constructor(categoryName, code, description, price, details = null){
@@ -22,13 +22,13 @@ class Product extends Category{
 	get details(){
 		return this._details !== null
 		? ` /*/ ${this._details}`
-		: "";
+		: '';
 	}
 	get images(){
 		return this._images;
 	}
 	get toString(){
-		return `${this._category} "${this._code}" "${this._descriptions}${this.details}" ${this._price}`;
+		return `${this._category} '${this._code}' '${this._descriptions}${this.details}' ${this._price}`;
 	}
 
 	addDescription(description){
