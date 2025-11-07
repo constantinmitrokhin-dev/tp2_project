@@ -20,7 +20,25 @@ class CoreProductType extends CoreType {
                     type: 'ht_data',
                     allowNull: false,
                     field: 'ht_data'
-                }
+                }, 
+                name: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					unique: 'kind_name_business_id',
+					field: 'name'
+				},
+				kind: {
+					type: DataTypes.STRING,
+					allowNull: true,
+					unique: 'kind_name_business_id',
+					field: 'kind'
+				},
+				business_id: {
+					type: DataTypes.INTEGER,
+					allowNull: true,
+					unique: 'kind_name_business_id',
+					field: 'business_id'
+				}
             },
             {
                 sequelize,
@@ -36,28 +54,28 @@ class CoreProductType extends CoreType {
                     beforeValidate: async (instance, options) => {
                         const txOpt = options?.transaction ? { transaction: options.transaction } : {};
 
-                        // Set kind value for product types
-                        instance.kind = 'PRODUCT';
-
                         const [parent] = await sequelize.query(
-                            `INSERT INTO core_type (kind, business_id, name) 
-                             VALUES ($kind, $business_id, $name) 
-                             RETURNING id, ht_data`,
+                            `INSERT INTO core_type (name, business_id, kind) 
+                             VALUES ($name, $business_id, $kind) 
+                             RETURNING id, ht_data, name, business_id, kind`,
                             { 
-                                bind: {
-                                    kind: instance.kind,
-                                    business_id: instance.business_id,
-                                    name: instance.name
-                                },
                                 type: QueryTypes.SELECT,
+                                bind: {
+                                    name: instance.name,
+                                    business_id: instance.business_id,
+                                    kind: instance.kind
+                                },
                                 ...txOpt 
-                            }
+                            },
                         );
 
                         if (!parent) throw new Error('No se pudo crear core_type');
 
                         instance.id = parent.id;
                         instance.ht_data = parent.ht_data;
+                        instance.name = parent.name;
+                        instance.business_id = parent.business_id;
+                        instance.kind = parent.kind;
                     }
                 }
             }

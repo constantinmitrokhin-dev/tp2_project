@@ -49,12 +49,18 @@ class CoreProduct extends CoreObject {
                 valid_until: {
                     type: DataTypes.DATE, // TIMESTAMPTZ
                     allowNull: true,
-                    field: 'valid_until'
+                    field: 'valid_until',
+                    defaultValue: null
                 },
                 code: {
                     type: DataTypes.STRING,
                     allowNull: true,
                     field: 'code'
+                },
+                description: {
+                    type: DataTypes.TEXT,
+                    allowNull: true,
+                    field: 'description'
                 },
                 price: {
                     type: DataTypes.DECIMAL,
