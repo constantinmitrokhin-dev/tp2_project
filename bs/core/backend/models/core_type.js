@@ -30,14 +30,14 @@ class CoreType extends CoreObject {
 					field: 'name'
 				},
 				kind: {
-					type: DataTypes.INTEGER,
+					type: DataTypes.STRING,
 					allowNull: true,
 					unique: 'kind_name_business_id',
 					field: 'kind'
 				},
 				business_id: {
 					type: DataTypes.INTEGER,
-					allowNull: false,
+					allowNull: true,
 					unique: 'kind_name_business_id',
 					field: 'business_id'
 				}
