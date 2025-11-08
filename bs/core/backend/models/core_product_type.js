@@ -1,3 +1,4 @@
+
 const CoreType = require('./core_type');
 
 
@@ -35,7 +36,7 @@ class CoreProductType extends CoreType {
 				},
 				business_id: {
 					type: DataTypes.INTEGER,
-					allowNull: true,
+					allowNull: false,
 					unique: 'kind_name_business_id',
 					field: 'business_id'
 				}

@@ -1,3 +1,4 @@
+
 const CoreObject = require('./core_object');
 const CoreCountry = require('./core_country');
 const CoreType = require('./core_type');
@@ -54,7 +55,7 @@ async function core_mod_define_models(sequelize, DataTypes) {
 		CoreBusiness,
 		CoreBusinessLocation,
 		CoreProductType,
-		CoreProduct
+		CoreProduct,
 	};
 }
 
