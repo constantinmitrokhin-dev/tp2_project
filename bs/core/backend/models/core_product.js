@@ -3,6 +3,7 @@ const { QueryTypes } = require('sequelize');
 const CoreProductType = require('./core_product_type');
 const CoreBusiness = require('./core_business');
 
+
 class CoreProduct extends CoreObject {
 	static initModel(sequelize, DataTypes) {
 		super.init(
