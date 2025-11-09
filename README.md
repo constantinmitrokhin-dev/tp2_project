@@ -31,7 +31,7 @@
 TP2_PROJECT/
 ├── loader/             # Procesador de archivos y cargador de Base de Datos Inicial
 │   ├── data/               # Carpeta para alocar los archivos a procesar
-│   │   ├── images/             # Almacena las imágenes extraidas del 
+│   │   ├── images/             # Almacena las imágenes extraidas del excell
 ├── bs/                 # Build System
 │   ├── core/				# Módulo Central.
 │   │   ├── backend/			# Sub-Módulos DB.

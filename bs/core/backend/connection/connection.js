@@ -1,30 +1,28 @@
 
-const fs = require('fs');
 const path = require('path');
-const { sequelize } = require('./sequelize.js');
-const { modelDefiners } = require('../models/models.js');
+const { core_mod_define_models } = require('../models/models.js');
+const { core_conn_execute_query_from_file } = require('./utiles.js');
 
 
-modelDefiners.forEach((model) => model(sequelize));
-// Capitalizamos los nombres de los modelos ie: product => Product
-const entries = Object.entries(sequelize.models);
-const capsEntries = entries.map((entry) => [
-	entry[0][0].toUpperCase() + entry[0].slice(1),
-	entry[1],
-]);
-sequelize.models = Object.fromEntries(capsEntries);
+async function core_conn_initialize_database(sequelize) {
+	try {
+		const typesPath = path.join(__dirname, '..', 'models', 'queries', 'types.sql');
+		await core_conn_execute_query_from_file(sequelize, typesPath);
 
+		// ahora inicializar modelos
+		sequelize.models = await core_mod_define_models(sequelize, require('sequelize').DataTypes);
 
-const {
-	CoreObject
-} = sequelize.models;
+		// sincronizar modelos con la base de datos
+		await sequelize.sync({ force: true/*, alter: true*/ });
 
-
-//! Relationships
-// No hay relaciones por el momento
+		return true;
+	} catch (error) {
+		console.error('Error initializing database:', error);
+		throw error;
+	}
+}
 
 
 module.exports = {
-	...sequelize.models,
-	conn: sequelize
+	core_conn_initialize_database
 };
