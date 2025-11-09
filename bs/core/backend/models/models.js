@@ -6,6 +6,8 @@ const CoreBusiness = require('./core_business');
 const CoreBusinessLocation = require('./core_business_location');
 const CoreProductType = require('./core_product_type');
 const CoreProduct = require('./core_product');
+const CoreStateType = require('./core_state_type');
+const CoreState = require('./core_state');
 
 
 async function core_mod_define_models(sequelize, DataTypes) {
@@ -17,6 +19,8 @@ async function core_mod_define_models(sequelize, DataTypes) {
 	CoreBusinessLocation.initModel(sequelize, DataTypes);
 	CoreProductType.initModel(sequelize, DataTypes);
 	CoreProduct.initModel(sequelize, DataTypes);
+	CoreStateType.initModel(sequelize, DataTypes);
+	CoreState.initModel(sequelize, DataTypes);
 
 	// 2. Definir relaciones de herencia (uno a uno, mismo id)
 	CoreObject.hasOne(CoreCountry, { foreignKey: 'id', as: 'country' });
@@ -37,6 +41,12 @@ async function core_mod_define_models(sequelize, DataTypes) {
 	CoreObject.hasOne(CoreProduct, { foreignKey: 'id', as: 'product' });
 	CoreProduct.belongsTo(CoreObject, { foreignKey: 'id', as: 'coreObject' });
 
+	CoreType.hasOne(CoreStateType, { foreignKey: 'id', as: 'stateType' });
+	CoreStateType.belongsTo(CoreType, { foreignKey: 'id', as: 'coreType' });
+
+	CoreObject.hasOne(CoreState, { foreignKey: 'id', as: 'state' });
+	CoreState.belongsTo(CoreObject, { foreignKey: 'id', as: 'coreObject' });
+
 	// 3. Relaciones adicionales del diagrama
 	CoreBusiness.belongsTo(CoreCountry, { foreignKey: 'country_id', as: 'country' });
 	CoreCountry.hasMany(CoreBusiness, { foreignKey: 'country_id', as: 'businesses' });
@@ -46,6 +56,9 @@ async function core_mod_define_models(sequelize, DataTypes) {
 
 	CoreProductType.hasMany(CoreProduct, { foreignKey: 'type_id', as: 'products' });
 	CoreProduct.belongsTo(CoreProductType, { foreignKey: 'type_id', as: 'type' });
+
+	CoreStateType.hasMany(CoreState, { foreignKey: 'type_id', as: 'states' });
+	CoreState.belongsTo(CoreStateType, { foreignKey: 'type_id', as: 'type' });
 
 	// 4. Retornar modelos
 	return {
