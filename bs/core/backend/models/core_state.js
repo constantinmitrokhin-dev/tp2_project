@@ -1,5 +1,6 @@
 
 const CoreObject = require('./core_object');
+const CoreStateType = require('./core_state_type');
 const { QueryTypes } = require('sequelize');
 
 

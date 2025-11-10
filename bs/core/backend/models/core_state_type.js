@@ -44,7 +44,7 @@ class CoreStateType extends CoreType {
             {
                 sequelize,
                 modelName: 'CoreStateType',
-                tableName: 'core_product_type',
+                tableName: 'core_state_type',
                 timestamps: false,
                 relationships: {
                     type: 'inheritance',
