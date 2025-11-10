@@ -143,7 +143,7 @@ function loader_build_states(stateList){
 	const states = [];
 	for (let i = 0; i < stateList.length; i++) {
 		const e = stateList[i];
-		let state = new State(e.name, e.iso3, e.iso2, e.currency, e.currency_name, e.currency_symbol, e.tld, e.phonecode);
+		let state = new State(e.name, e.iso3166_2, e.iso2, e.country_code, e.country_name, e.type);
 		states.push(state);
 	}
 
@@ -154,7 +154,7 @@ function loader_build_states(stateList){
 async function loader_build_states_from_files() {
 	let processedStateList = [];
 	let initialStateList;
-	const files = loader_find_relevant_files('countries');
+	const files = loader_find_relevant_files('states');
 	if (files.length === 0) {
 		console.log('⚠️ No se encontraron archivos válidos para procesar en /list');
 		process.exit(0);
