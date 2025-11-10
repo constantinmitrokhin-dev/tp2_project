@@ -1,6 +1,7 @@
 
 const CoreObject = require('./core_object');
 const { QueryTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 
 class CoreUser extends CoreObject {
@@ -50,6 +51,11 @@ class CoreUser extends CoreObject {
 					unique: true,
 					field: 'email'
 				},
+				password: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					field: 'password'
+				},
 				status: {
 					type: DataTypes.ENUM('active', 'inactive', 'pending'),
 					allowNull: false,
@@ -82,9 +88,28 @@ class CoreUser extends CoreObject {
 						instance.id = parent.id;
 						instance.ht_data = parent.ht_data;
 					},
+					beforeCreate: async (instance, options) => {
+						// Hash del password antes de crear el usuario
+						if (instance.password) {
+							const saltRounds = 10;
+							instance.password = await bcrypt.hash(instance.password, saltRounds);
+						}
+					},
+					beforeUpdate: async (instance, options) => {
+						// Hash del password antes de actualizar solo si fue modificado
+						if (instance.changed('password')) {
+							const saltRounds = 10;
+							instance.password = await bcrypt.hash(instance.password, saltRounds);
+						}
+					},
 				},
 			}
 		);
+	}
+
+	// Método de instancia para comparar password
+	async comparePassword(candidatePassword) {
+		return await bcrypt.compare(candidatePassword, this.password);
 	}
 }
 
