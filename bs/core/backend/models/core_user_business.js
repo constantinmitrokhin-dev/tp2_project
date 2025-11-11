@@ -9,6 +9,22 @@ class CoreUserBusiness extends CoreObject {
 	static initModel(sequelize, DataTypes) {
 		super.init(
 			{
+				id: {
+					type: DataTypes.INTEGER,
+					allowNull: false,
+					foreignKey: true,
+					primaryKey: true,
+					references: {
+						model: CoreObject,
+						key: 'id'
+					},
+					field: 'id'
+				},
+				ht_data: {
+					type: 'ht_data',
+					allowNull: false,
+					field: 'ht_data'
+				},
 				user_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
