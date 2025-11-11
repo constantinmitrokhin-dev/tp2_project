@@ -1,6 +1,7 @@
 
 const CoreObject = require('./core_object');
 const { QueryTypes } = require('sequelize');
+const { ERR_NOT_NULL } = require('./utils/msgs_error');
 
 
 class CoreType extends CoreObject {
@@ -27,6 +28,11 @@ class CoreType extends CoreObject {
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: 'kind_name_business_id',
+					validate: {
+						notNull: {
+							msg: `core_type.name: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'name'
 				},
 				kind: {
@@ -39,6 +45,11 @@ class CoreType extends CoreObject {
 					type: DataTypes.INTEGER,
 					allowNull: false,
 					unique: 'kind_name_business_id',
+					validate: {
+						notNull: {
+							msg: `core_type.business_id: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'business_id'
 				}
 			},

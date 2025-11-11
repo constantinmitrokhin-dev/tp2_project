@@ -28,7 +28,7 @@ module.exports = async function (sequelize) {
 			name: !product._name ? product._descriptions[0] : product._name,
 			code: product._code,
 			description: Array.isArray(product._descriptions) ? product._descriptions.join(', ') : product._descriptions,
-			price:  product._price && !isNaN(product._price) ? parseFloat(product._price) : 0,
+			price:  isNaN(product._price) || (product._price == ' ') ? 0.0 : parseFloat(product._price),
 		});
 
 	}

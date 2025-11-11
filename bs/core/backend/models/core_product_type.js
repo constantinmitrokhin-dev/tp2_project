@@ -1,5 +1,6 @@
 
 const CoreType = require('./core_type');
+const { ERR_NOT_NULL } = require('./utils/msgs_error');
 
 
 class CoreProductType extends CoreType {
@@ -26,6 +27,11 @@ class CoreProductType extends CoreType {
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: 'kind_name_business_id',
+					validate: {
+						notNull: {
+							msg: `core_product_type.name: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'name'
 				},
 				kind: {
@@ -38,6 +44,11 @@ class CoreProductType extends CoreType {
 					type: DataTypes.INTEGER,
 					allowNull: false,
 					unique: 'kind_name_business_id',
+					validate: {
+						notNull: {
+							msg: `core_product_type.business_id: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'business_id'
 				}
 			},

@@ -2,6 +2,8 @@ const CoreObject = require('./core_object');
 const { QueryTypes } = require('sequelize');
 const CoreProductType = require('./core_product_type');
 const CoreBusiness = require('./core_business');
+const { PRODUCT_PRICE_MIN } = require('./utils/constants');
+const { ERR_NOT_NULL, ERR_IS_NUMERIC, ERR_PRODUCT_PRICE_MIN } = require('./utils/msgs_error');
 
 
 class CoreProduct extends CoreObject {
@@ -27,6 +29,11 @@ class CoreProduct extends CoreObject {
 				type_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_product.type_id: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'type_id',
 					references: {
 						model: CoreProductType,
@@ -36,6 +43,11 @@ class CoreProduct extends CoreObject {
 				business_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_product.business_id: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'business_id',
 					references: {
 						model: CoreBusiness,
@@ -44,7 +56,12 @@ class CoreProduct extends CoreObject {
 				},
 				name: {
 					type: DataTypes.STRING,
-					allowNull: true,
+					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_product.name: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'name'
 				},
 				valid_until: {
@@ -67,15 +84,15 @@ class CoreProduct extends CoreObject {
 					type: DataTypes.REAL,
 					allowNull: true,
 					field: 'price',
-					// validate: {
-					// 	 isDecimal: { msg: 'El precio debe ser numérico' },
-					// 	 isPositive(value) {
-					// 		 if (value == null) return; // permitir null si la columna lo permite
-					// 		 if (Number(value) <= 0) {
-					// 			 throw new Error('El precio debe ser un número positivo');
-					// 		 }
-					// 	 }
-					// }
+					validate: {
+						 isNumeric: {
+							msg: `core_product.price: ${ERR_IS_NUMERIC}`
+						},
+						min: {
+							args: PRODUCT_PRICE_MIN,
+							msg: ERR_PRODUCT_PRICE_MIN
+						}
+					}
 				}
 			},
 			{

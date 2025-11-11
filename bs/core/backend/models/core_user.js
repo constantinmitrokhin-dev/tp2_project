@@ -2,6 +2,8 @@
 const CoreObject = require('./core_object');
 const { QueryTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
+const { REGEX_ALPHABETICAL_FULL, REGEX_USERNAME, USER_PASSWORD_LEN, USER_STATUS_ENUM } = require('./utils/constants');
+const { ERR_REGEX_ALPHABETICAL_FULL, ERR_REGEX_USERNAME, ERR_IS_EMAIL, ERR_USER_PASSWORD_LEN, ERR_NOT_NULL } = require('./utils/msgs_error');
 
 
 class CoreUser extends CoreObject {
@@ -27,33 +29,83 @@ class CoreUser extends CoreObject {
 				name: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_user.name: ${ERR_NOT_NULL}`
+						},
+						is: {
+							args: REGEX_ALPHABETICAL_FULL,
+							msg: `core_user.name: ${ERR_REGEX_ALPHABETICAL_FULL}`
+						}
+					},
 					field: 'name'
 				},
 				middle_name: {
 					type: DataTypes.STRING,
 					allowNull: true,
+					validate: {
+						is: {
+							args: REGEX_ALPHABETICAL_FULL,
+							msg: `core_user.middle_name: ${ERR_REGEX_ALPHABETICAL_FULL}`
+						}
+					},
 					field: 'middle_name'
 				},
 				last_name: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_user.last_name: ${ERR_NOT_NULL}`
+						},
+						is: {
+							args: REGEX_ALPHABETICAL_FULL,
+							msg: `core_user.last_name: ${ERR_REGEX_ALPHABETICAL_FULL}`
+						}
+					},
 					field: 'last_name'
 				},
 				user_name: {
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: true,
+					validate: {
+						notNull: {
+							msg: `core_user.user_name: ${ERR_NOT_NULL}`
+						},
+						is: {
+							args: REGEX_USERNAME,
+							msg: `core_user.user_name: ${ERR_REGEX_USERNAME}`
+						}
+					},
 					field: 'user_name'
 				},
 				email: {
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: true,
+					validate: {
+						notNull: {
+							msg: `core_user.email: ${ERR_NOT_NULL}`
+						},
+						isEmail: {
+							msg: `core_user.email: ${ERR_IS_EMAIL}`
+						}
+					},
 					field: 'email'
 				},
 				password: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_user.password: ${ERR_NOT_NULL}`
+						},
+						len: {
+							args: USER_PASSWORD_LEN,
+							msg: `core_user.password: ${ERR_USER_PASSWORD_LEN}`
+						}
+					},
 					field: 'password'
 				},
 				jwt: {
@@ -62,9 +114,10 @@ class CoreUser extends CoreObject {
 					field: 'jwt'
 				},
 				status: {
-					type: DataTypes.ENUM('active', 'inactive', 'pending'),
+					type: DataTypes.ENUM,
 					allowNull: false,
-					defaultValue: 'pending',
+					values: USER_STATUS_ENUM,
+					defaultValue: USER_STATUS_ENUM[0],
 					field: 'status'
 				}
 			},
@@ -80,6 +133,7 @@ class CoreUser extends CoreObject {
 				},
 				hooks: {
 					beforeValidate: async (instance, options) => {
+						/* if (!instance.isNewRecord) return; */  // TODO: Activar esta línea par evitar duplicado de core_object en los update
 						// Este hook corre ANTES de la validación de notNull
 						const txOpt = options?.transaction ? { transaction: options.transaction } : {};
 
@@ -117,5 +171,6 @@ class CoreUser extends CoreObject {
 		return await bcrypt.compare(candidatePassword, this.password);
 	}
 }
+
 
 module.exports = CoreUser;

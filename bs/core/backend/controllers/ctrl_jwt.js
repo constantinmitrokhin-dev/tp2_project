@@ -5,7 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const core_ctrl_create_jwt = (id, username) => {
 	return jwt.sign(
-		{ id: id, username: username },
+		{ id, username },
 		JWT_SECRET,
 		{ expiresIn: '3h' }
 	)
