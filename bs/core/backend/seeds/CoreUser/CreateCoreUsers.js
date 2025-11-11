@@ -5,8 +5,8 @@ const CoreUser = require('../../models/core_user.js');
 module.exports = async function () {
 	const usersArray = [
 		{
-			name: 'José Ángel Carlos',
-			middle_name: "María's",
+			name: 'Carlos',
+			middle_name: 'María',
 			last_name: 'Perez',
 			user_name: 'c_p',
 			email: 'carlos.perez@mail.com',
