@@ -9,6 +9,7 @@ const CoreProduct = require('./core_product');
 const CoreStateType = require('./core_state_type');
 const CoreState = require('./core_state');
 const CoreUser = require('./core_user');
+const CoreUserBusiness = require('./core_user_business');
 
 
 async function core_mod_define_models(sequelize, DataTypes) {
@@ -23,6 +24,7 @@ async function core_mod_define_models(sequelize, DataTypes) {
 	CoreStateType.initModel(sequelize, DataTypes);
 	CoreState.initModel(sequelize, DataTypes);
 	CoreUser.initModel(sequelize, DataTypes);
+	CoreUserBusiness.initModel(sequelize, DataTypes);
 
 	// 2. Definir relaciones de herencia (uno a uno, mismo id)
 	CoreObject.hasOne(CoreCountry, { foreignKey: 'id', as: 'country' });
@@ -48,8 +50,12 @@ async function core_mod_define_models(sequelize, DataTypes) {
 
 	CoreObject.hasOne(CoreState, { foreignKey: 'id', as: 'state' });
 	CoreState.belongsTo(CoreObject, { foreignKey: 'id', as: 'coreObject' });
+
 	CoreObject.hasOne(CoreUser, { foreignKey: 'id', as: 'user' });
 	CoreUser.belongsTo(CoreObject, { foreignKey: 'id', as: 'coreObject' });
+
+	CoreObject.hasOne(CoreUserBusiness, { foreignKey: 'id', as: 'userBusiness' });
+	CoreUserBusiness.belongsTo(CoreObject, { foreignKey: 'id', as: 'coreObject' });
 
 	// 3. Relaciones adicionales del diagrama
 	CoreBusiness.belongsTo(CoreCountry, { foreignKey: 'country_id', as: 'country' });
@@ -64,6 +70,13 @@ async function core_mod_define_models(sequelize, DataTypes) {
 	CoreStateType.hasMany(CoreState, { foreignKey: 'type_id', as: 'states' });
 	CoreState.belongsTo(CoreStateType, { foreignKey: 'type_id', as: 'type' });
 
+	// CoreUserBusiness relaciones (relación muchos-a-muchos entre User y Business)
+	CoreUser.hasMany(CoreUserBusiness, { foreignKey: 'user_id', as: 'userBusinesses' });
+	CoreUserBusiness.belongsTo(CoreUser, { foreignKey: 'user_id', as: 'user' });
+
+	CoreBusiness.hasMany(CoreUserBusiness, { foreignKey: 'business_id', as: 'userBusinesses' });
+	CoreUserBusiness.belongsTo(CoreBusiness, { foreignKey: 'business_id', as: 'business' });
+
 	// 4. Retornar modelos
 	return {
 		CoreObject,
@@ -74,6 +87,7 @@ async function core_mod_define_models(sequelize, DataTypes) {
 		CoreProductType,
 		CoreProduct,
 		CoreUser,
+		CoreUserBusiness,
 	};
 }
 

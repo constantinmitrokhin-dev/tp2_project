@@ -17,7 +17,7 @@ module.exports = async function () {
 			country_id: country1.id,
 			fiscal_code: '30-70856789-9',
 			url_name: 'la_espiga',
-			trade_name: 'Panadería La Espiga',
+			trade_name: 'Ferretería La Espiga',
 			register_name: 'La Espiga S.R.L.'
 		},
 		{
