@@ -56,6 +56,11 @@ class CoreUser extends CoreObject {
 					allowNull: false,
 					field: 'password'
 				},
+				jwt: {
+					type: DataTypes.STRING,
+					allowNull: true,
+					field: 'jwt'
+				},
 				status: {
 					type: DataTypes.ENUM('active', 'inactive', 'pending'),
 					allowNull: false,
