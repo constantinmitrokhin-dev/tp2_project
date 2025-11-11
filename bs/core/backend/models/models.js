@@ -8,6 +8,7 @@ const CoreProductType = require('./core_product_type');
 const CoreProduct = require('./core_product');
 const CoreStateType = require('./core_state_type');
 const CoreState = require('./core_state');
+const CoreUser = require('./core_user');
 
 
 async function core_mod_define_models(sequelize, DataTypes) {
@@ -21,6 +22,7 @@ async function core_mod_define_models(sequelize, DataTypes) {
 	CoreProduct.initModel(sequelize, DataTypes);
 	CoreStateType.initModel(sequelize, DataTypes);
 	CoreState.initModel(sequelize, DataTypes);
+	CoreUser.initModel(sequelize, DataTypes);
 
 	// 2. Definir relaciones de herencia (uno a uno, mismo id)
 	CoreObject.hasOne(CoreCountry, { foreignKey: 'id', as: 'country' });
@@ -46,6 +48,8 @@ async function core_mod_define_models(sequelize, DataTypes) {
 
 	CoreObject.hasOne(CoreState, { foreignKey: 'id', as: 'state' });
 	CoreState.belongsTo(CoreObject, { foreignKey: 'id', as: 'coreObject' });
+	CoreObject.hasOne(CoreUser, { foreignKey: 'id', as: 'user' });
+	CoreUser.belongsTo(CoreObject, { foreignKey: 'id', as: 'coreObject' });
 
 	// 3. Relaciones adicionales del diagrama
 	CoreBusiness.belongsTo(CoreCountry, { foreignKey: 'country_id', as: 'country' });
@@ -69,6 +73,7 @@ async function core_mod_define_models(sequelize, DataTypes) {
 		CoreBusinessLocation,
 		CoreProductType,
 		CoreProduct,
+		CoreUser,
 	};
 }
 
