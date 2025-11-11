@@ -1,9 +1,11 @@
 
 const CoreObject = require('./core_object');
+const CoreUser = require('./core_user');
+const CoreBusiness = require('./core_business');
 const { QueryTypes } = require('sequelize');
 
 
-class CoreType extends CoreObject {
+class CoreUserBusiness extends CoreObject {
 	static initModel(sequelize, DataTypes) {
 		super.init(
 			{
@@ -19,49 +21,40 @@ class CoreType extends CoreObject {
 					field: 'id'
 				},
 				ht_data: {
-					type: 'ht_data', // usa el tipo personalizado definido en la DB
+					type: 'ht_data',
 					allowNull: false,
 					field: 'ht_data'
 				},
-				name: {
-					type: DataTypes.STRING,
+				user_id: {
+					type: DataTypes.INTEGER,
 					allowNull: false,
-					unique: 'kind_name_business_id',
-					field: 'name'
-				},
-				kind: {
-					type: DataTypes.STRING,
-					allowNull: true,
-					unique: 'kind_name_business_id',
-					field: 'kind'
+					unique: true,
+					references: {
+						model: CoreUser,
+						key: 'id'
+					}
 				},
 				business_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
-					unique: 'kind_name_business_id',
-					field: 'business_id'
+					references: {
+						model: CoreBusiness,
+						key: 'id'
+					}
+				},
+				role: {
+					type: DataTypes.TEXT,
+					allowNull: true
 				}
 			},
 			{
 				sequelize,
-				modelName: 'CoreType',
-				tableName: 'core_type',
+				modelName: 'CoreUserBusiness',
+				tableName: 'core_user_business',
+				schema: 'public',
 				timestamps: false,
-				indexes: [
-					{
-						name: 'kind_name_business_id',
-						unique: true,
-						fields: ['name', 'business_id', 'kind']
-					}
-				],
-				relationships: {
-					type: 'inheritance',
-					parent: CoreObject,
-					foreignKey: 'id'
-				},
 				hooks: {
 					beforeValidate: async (instance, options) => {
-						// Este hook corre ANTES de la validación de notNull
 						const txOpt = options?.transaction ? { transaction: options.transaction } : {};
 
 						const [parent] = await sequelize.query(
@@ -73,12 +66,13 @@ class CoreType extends CoreObject {
 
 						instance.id = parent.id;
 						instance.ht_data = parent.ht_data;
-					},
-				},
+					}
+				}
 			}
 		);
+		return this;
 	}
 }
 
 
-module.exports = CoreType;
+module.exports = CoreUserBusiness;

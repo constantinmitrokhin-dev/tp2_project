@@ -1,9 +1,10 @@
 
 const CoreObject = require('./core_object');
+const CoreStateType = require('./core_state_type');
 const { QueryTypes } = require('sequelize');
 
 
-class CoreType extends CoreObject {
+class CoreState extends CoreObject {
 	static initModel(sequelize, DataTypes) {
 		super.init(
 			{
@@ -23,37 +24,44 @@ class CoreType extends CoreObject {
 					allowNull: false,
 					field: 'ht_data'
 				},
+				country_id: {
+					type: DataTypes.INTEGER,
+					allowNull: false,
+					field: 'country_id'
+				},
+				type_id: {
+					type: DataTypes.INTEGER,
+					allowNull: false,
+					field: 'type_id',
+					references: {
+						model: CoreStateType,
+						key: 'id'
+					}
+				},
 				name: {
 					type: DataTypes.STRING,
 					allowNull: false,
-					unique: 'kind_name_business_id',
+					unique: true,
 					field: 'name'
 				},
-				kind: {
+				iso3: {
 					type: DataTypes.STRING,
-					allowNull: true,
-					unique: 'kind_name_business_id',
-					field: 'kind'
-				},
-				business_id: {
-					type: DataTypes.INTEGER,
 					allowNull: false,
-					unique: 'kind_name_business_id',
-					field: 'business_id'
-				}
+					unique: true,
+					field: 'iso3'
+				},
+				iso2: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					unique: true,
+					field: 'iso2'
+				},
 			},
 			{
 				sequelize,
-				modelName: 'CoreType',
-				tableName: 'core_type',
+				modelName: 'CoreState',
+				tableName: 'core_state',
 				timestamps: false,
-				indexes: [
-					{
-						name: 'kind_name_business_id',
-						unique: true,
-						fields: ['name', 'business_id', 'kind']
-					}
-				],
 				relationships: {
 					type: 'inheritance',
 					parent: CoreObject,
@@ -80,5 +88,4 @@ class CoreType extends CoreObject {
 	}
 }
 
-
-module.exports = CoreType;
+module.exports = CoreState;

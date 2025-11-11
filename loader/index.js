@@ -1,21 +1,22 @@
 
 
-const FileFactory = require("./src/classes/FileFactory");
-const Product = require("./src/classes/Product");
-const Country = require("./src/classes/Country");
-const fs = require("fs");
-const path = require("path");
+const FileFactory = require('./src/classes/FileFactory');
+const Product = require('./src/classes/Product');
+const Country = require('./src/classes/Country');
+const State = require('./src/classes/State');
+const fs = require('fs');
+const path = require('path');
 
 
 // Establece el PATH de la carpeta de carga
-const DIRECTORY_NAME = "data";
+const DIRECTORY_NAME = 'data';
 const DATA_FOLDER_PATH = path.join(__dirname, DIRECTORY_NAME);
 
 
 // Buscar todos los archivos Excel / PDF / CSV en la carpeta
 function loader_find_relevant_files(beginsWith) {
 	return fs.readdirSync(DATA_FOLDER_PATH).filter((file) =>
-		(file.endsWith(".xlsx") || file.endsWith(".xls") || file.endsWith(".pdf") || file.endsWith(".csv")) && file.startsWith(beginsWith)
+		(file.endsWith('.xlsx') || file.endsWith('.xls') || file.endsWith('.pdf') || file.endsWith('.csv')) && file.startsWith(beginsWith)
 	);
 }
 
@@ -24,26 +25,26 @@ function loader_find_relevant_files(beginsWith) {
 function loader_sanitize_product_data(productList) {
 	const sanitizedList = productList
 	.map(e => {
-		// Si existe la clave "Precio"
-			if ("Precio" in e && "Código" in e && Object.keys(e).length === 2 && typeof e["Precio"] === "string") {
-				delete e["Precio"];
+		// Si existe la clave 'Precio'
+			if ('Precio' in e && 'Código' in e && Object.keys(e).length === 2 && typeof e['Precio'] === 'string') {
+				delete e['Precio'];
 			}
-		// Sanitiza el "Código"
-			if ("Código" in e) {
-				e["Código"] = e["Código"].toString().trim()
+		// Sanitiza el 'Código'
+			if ('Código' in e) {
+				e['Código'] = e['Código'].toString().trim()
 			}
-		// Sanitiza la "Descripción"
-			if ("Descripción" in e) {
-				e["Descripción"] = e["Descripción"].toString().trim()
+		// Sanitiza la 'Descripción'
+			if ('Descripción' in e) {
+				e['Descripción'] = e['Descripción'].toString().trim()
 			}
 		return e;
 	})
 	// Elimina las líneas vacias
-	.filter(e => !(Object.keys(e).length === 1 && "Precio" in e))
-	// Elimina las descripciones sin "Código"
-	.filter(e => !("Descripción" in e && !("Código" in e)))
+	.filter(e => !(Object.keys(e).length === 1 && 'Precio' in e))
+	// Elimina las descripciones sin 'Código'
+	.filter(e => !('Descripción' in e && !('Código' in e)))
 	// Elimina los contenidos de los Kits
-	.filter(e => !("Varios" in e))
+	.filter(e => !('Varios' in e))
 	return sanitizedList;
 }
 
@@ -55,13 +56,13 @@ function loader_build_products(productList){
 	for (let i = 0; i < sanitizedList.length; i++) {
 		const e = sanitizedList[i];
 		if( Object.keys(e).length === 1 && 'Código' in e) {
-			if (e["Código"] !== e["Código"].toUpperCase()) continue;
+			if (e['Código'] !== e['Código'].toUpperCase()) continue;
 			category = e['Código'];
 			continue;
 		}
 
-		let details = "Detalle" in e ? e["Detalle"].trim() : null;
-		let product = new Product(category, e["Código"], e["Descripción"], e["Precio"], details);
+		let details = 'Detalle' in e ? e['Detalle'].trim() : null;
+		let product = new Product(category, e['Código'], e['Descripción'], e['Precio'], details);
 		products.push(product);
 	}
 
@@ -74,7 +75,7 @@ async function loader_build_products_from_files() {
 	let initialProductList;
 	const files = loader_find_relevant_files('products');
 	if (files.length === 0) {
-		console.log("⚠️ No se encontraron archivos válidos para procesar en /list");
+		console.log('⚠️ No se encontraron archivos válidos para procesar en /list');
 		process.exit(0);
 	}
 	try {
@@ -93,8 +94,8 @@ async function loader_build_products_from_files() {
 		if ('Código' in rawProduct && 'Descripción' in rawProduct) {
 			let j = i + 1;
 			while (j < initialProductList.length && !('Código' in initialProductList[j]) && 'Descripción' in initialProductList[j]){
-				const product = processedProductList.find(e => e.code == rawProduct["Código"]);
-				if(product) product.addDescription(initialProductList[j]["Descripción"]);
+				const product = processedProductList.find(e => e.code == rawProduct['Código']);
+				if(product) product.addDescription(initialProductList[j]['Descripción']);
 				j++;
 			}
 		}
@@ -121,7 +122,7 @@ async function loader_build_countries_from_files() {
 	let initialCountryList;
 	const files = loader_find_relevant_files('countries');
 	if (files.length === 0) {
-		console.log("⚠️ No se encontraron archivos válidos para procesar en /list");
+		console.log('⚠️ No se encontraron archivos válidos para procesar en /list');
 		process.exit(0);
 	}
 	try {
@@ -138,8 +139,43 @@ async function loader_build_countries_from_files() {
 	return processedCountryList;
 }
 
+function loader_build_states(stateList){
+	const states = [];
+	for (let i = 0; i < stateList.length; i++) {
+		const e = stateList[i];
+		let state = new State(e.name, e.iso3166_2, e.iso2, e.country_code, e.country_name, e.type);
+		states.push(state);
+	}
+
+	return states;
+}
+
+
+async function loader_build_states_from_files() {
+	let processedStateList = [];
+	let initialStateList;
+	const files = loader_find_relevant_files('states');
+	if (files.length === 0) {
+		console.log('⚠️ No se encontraron archivos válidos para procesar en /list');
+		process.exit(0);
+	}
+	try {
+		for (let i = 0; i < files.length; i++) {
+			const element = files[i];
+			const e = FileFactory.create(`${DATA_FOLDER_PATH}\\${element}`)
+			initialStateList = await e.sheetToJSON();
+			processedStateList = [...processedStateList, ...loader_build_states(initialStateList)];
+		}
+	} catch (e) {
+		console.error(e.message);
+	}
+
+	return processedStateList;
+}
+
 
 module.exports = {
 	loader_build_products_from_files,
-	loader_build_countries_from_files
+	loader_build_countries_from_files,
+	loader_build_states_from_files
 };

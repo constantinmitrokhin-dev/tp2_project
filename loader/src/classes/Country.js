@@ -1,5 +1,5 @@
 
-const Category = require("./Category");
+const Category = require('./Category');
 
 class Country{
 	constructor(name, iso3, iso2, currency, currency_name, currency_symbol, tld, phone_code){

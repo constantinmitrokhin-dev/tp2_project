@@ -23,12 +23,5 @@
     "loader",
     "bs/core",
     "bs/inventory"
-  ],
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "dotenv": "^17.2.3",
-    "pg": "^8.16.3",
-    "sequelize": "^6.37.7",
-    "uuid": "^13.0.0"
-  }
+  ]
 }

@@ -1,9 +1,10 @@
 
 const CoreObject = require('./core_object');
+const CoreBusiness = require('./core_business');
 const { QueryTypes } = require('sequelize');
 
 
-class CoreType extends CoreObject {
+class CoreBusinessLocation extends CoreObject {
 	static initModel(sequelize, DataTypes) {
 		super.init(
 			{
@@ -23,37 +24,31 @@ class CoreType extends CoreObject {
 					allowNull: false,
 					field: 'ht_data'
 				},
-				name: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					unique: 'kind_name_business_id',
-					field: 'name'
-				},
-				kind: {
-					type: DataTypes.STRING,
-					allowNull: true,
-					unique: 'kind_name_business_id',
-					field: 'kind'
-				},
 				business_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
-					unique: 'kind_name_business_id',
+					references: {
+						model: CoreBusiness,
+						key: 'id'
+					},
 					field: 'business_id'
-				}
+				},
+				name: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					field: 'name'
+				},
+				address: {
+					type: 'address',
+					allowNull: true,
+					field: 'address'
+				},
 			},
 			{
 				sequelize,
-				modelName: 'CoreType',
-				tableName: 'core_type',
+				modelName: 'CoreBusinessLocation',
+				tableName: 'core_business_location',
 				timestamps: false,
-				indexes: [
-					{
-						name: 'kind_name_business_id',
-						unique: true,
-						fields: ['name', 'business_id', 'kind']
-					}
-				],
 				relationships: {
 					type: 'inheritance',
 					parent: CoreObject,
@@ -81,4 +76,4 @@ class CoreType extends CoreObject {
 }
 
 
-module.exports = CoreType;
+module.exports = CoreBusinessLocation;

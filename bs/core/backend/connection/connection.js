@@ -1,30 +1,16 @@
 
-const fs = require('fs');
 const path = require('path');
-const { defineModels } = require('../models/models.js');
+const { core_mod_define_models } = require('../models/models.js');
+const { core_conn_execute_query_from_file } = require('./utiles.js');
 
 
-async function initializeDatabase(sequelize) {
+async function core_conn_initialize_database(sequelize) {
 	try {
-		const queriesPath = path.join(__dirname, '..', 'models', 'queries', 'types.sql');
-		if (fs.existsSync(queriesPath)) {
-			const sql = fs.readFileSync(queriesPath, 'utf8');
-			try {
-				await sequelize.query(sql);
-				console.log('types.sql executed');
-			} catch (err) {
-				// Ignorar tipo ya existe (42710) u otros errores idempotentes
-				const code = err && err.parent && err.parent.code;
-				if (code === '42710') {
-					console.warn('Warning: los Custom DataTYPEs ya han sido creados - continuando');
-				} else {
-					throw err;
-				}
-			}
-		}
+		const typesPath = path.join(__dirname, '..', 'models', 'queries', 'types.sql');
+		await core_conn_execute_query_from_file(sequelize, typesPath);
 
 		// ahora inicializar modelos
-		sequelize.models = await defineModels(sequelize, require('sequelize').DataTypes);
+		sequelize.models = await core_mod_define_models(sequelize, require('sequelize').DataTypes);
 
 		// sincronizar modelos con la base de datos
 		await sequelize.sync({ force: true/*, alter: true*/ });
@@ -38,5 +24,5 @@ async function initializeDatabase(sequelize) {
 
 
 module.exports = {
-	initializeDatabase
+	core_conn_initialize_database
 };

@@ -1,8 +1,8 @@
 
-const path = require("path");
-const CsvFile = require("./CsvFile");
-const ExcelFile = require("./ExcelFile");
-// const PdfFile = require("./PdfFile");
+const path = require('path');
+const CsvFile = require('./CsvFile');
+const ExcelFile = require('./ExcelFile');
+// const PdfFile = require('./PdfFile');
 
 
 class FileFactory {
@@ -10,17 +10,18 @@ class FileFactory {
 		const ext = path.extname(fullFilePath).toLowerCase();
 
 		switch (ext) {
-			case ".csv":
+			case '.csv':
 				return new CsvFile(fullFilePath);
-			case ".xls":
-			case ".xlsx":
+			case '.xls':
+			case '.xlsx':
 				return new ExcelFile(fullFilePath);
-			// case ".pdf":
+			// case '.pdf':
 			// 	return new PdfFile(fullFilePath);
 			default:
 				throw new Error(`Tipo de archivo no soportado: ${ext}`);
 		}
 	}
 }
+
 
 module.exports = FileFactory;
