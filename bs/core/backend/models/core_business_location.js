@@ -2,6 +2,7 @@
 const CoreObject = require('./core_object');
 const CoreBusiness = require('./core_business');
 const { QueryTypes } = require('sequelize');
+const { ERR_NOT_NULL } = require('./utils/msgs_error');
 
 
 class CoreBusinessLocation extends CoreObject {
@@ -27,6 +28,11 @@ class CoreBusinessLocation extends CoreObject {
 				business_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_business_location.business_id: ${ERR_NOT_NULL}`
+						}
+					},
 					references: {
 						model: CoreBusiness,
 						key: 'id'
@@ -36,6 +42,11 @@ class CoreBusinessLocation extends CoreObject {
 				name: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_business_location.name: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'name'
 				},
 				address: {
