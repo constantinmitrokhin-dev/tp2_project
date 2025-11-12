@@ -29,8 +29,35 @@ const core_svc_product_find_all_inactive_by_business_and_date = async (p_busines
 
 
 //* Find a CoreProduct by its primary key (ID)
-const core_svc_product_find_by_id = async (p_user_id) => {
-	return await CoreProduct.findByPk(p_user_id);
+const core_svc_product_find_by_id = async (p_product_id) => {
+	return await CoreProduct.findByPk(p_product_id);
+}
+
+
+//* Find CoreProducts by text in name, code, or description
+const core_svc_product_find_by_text = async (p_business_id, p_text) => {
+	return await CoreProduct.findAll({
+		where: {
+			business_id: p_business_id,
+			[Op.or]: [
+				{ name:        { [Op.iLike]: `%${p_text}%` } },
+				{ code:        { [Op.iLike]: `%${p_text}%` } },
+				{ description: { [Op.iLike]: `%${p_text}%` } }
+			]
+		}
+	});
+}
+
+
+//* Find CoreProducts by exact name
+const core_svc_product_find_by_name = async (p_business_id, p_type_id, p_name) => {
+	return await CoreProduct.findOne({
+		where: {
+			business_id: p_business_id,
+			type_id:     p_type_id,
+			name:        p_name
+		}
+	});
 }
 
 
@@ -66,6 +93,8 @@ module.exports = {
 	core_svc_product_find_by_business_id_and_date,
 	core_svc_product_find_all_inactive_by_business_and_date,
 	core_svc_product_find_by_id,
+	core_svc_product_find_by_text,
+	core_svc_product_find_by_name,
 	core_svc_product_create,
 	core_svc_product_update,
 	core_svc_product_delete

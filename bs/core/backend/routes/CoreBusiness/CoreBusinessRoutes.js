@@ -18,7 +18,7 @@ router.get('/:id', (req, res) => {
 
 
 	// Get Business by {url_name}
-router.get('/byName', (req, res) => {
+router.get('/byUrlName', (req, res) => {
 	const { url_name } = req.body;
 	res.json({ message: `Se recibió el Business url_name: ${url_name}` });
 });

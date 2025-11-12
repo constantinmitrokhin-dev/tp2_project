@@ -24,6 +24,13 @@ router.get('/byName', (req, res) => {
 });
 
 
+	// Get Core Product by matching {name}, {code} or {description}
+router.get('/byText', (req, res) => {
+	const { name } = req.body;
+	res.json({ message: `Se recibió el Core Product name: ${name}` });
+});
+
+
 	// Create new Core Product
 router.post('/create',(req, res) => {
 	res.json({ message: `Creó nuevo Core Product` });
