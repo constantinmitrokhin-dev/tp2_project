@@ -2,6 +2,7 @@
 const CoreObject = require('./core_object');
 const { QueryTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
+const JWT = require('jsonwebtoken');
 const { REGEX_ALPHABETICAL_FULL, REGEX_USERNAME, USER_PASSWORD_LEN, USER_STATUS_ENUM } = require('./utils/constants');
 const { ERR_REGEX_ALPHABETICAL_FULL, ERR_REGEX_USERNAME, ERR_IS_EMAIL, ERR_USER_PASSWORD_LEN, ERR_NOT_NULL } = require('./utils/msgs_error');
 
@@ -167,8 +168,32 @@ class CoreUser extends CoreObject {
 	}
 
 	// Método de instancia para comparar password
-	async comparePassword(candidatePassword) {
-		return await bcrypt.compare(candidatePassword, this.password);
+	async comparePassword(p_incoming_pswd) {
+		return await bcrypt.compare(p_incoming_pswd, this.password);
+	}
+
+	async createJwt() {
+		this.jwt = await JWT.sign(
+			{ id: this.id, user_name: this.user_name },
+			process.env.JWT_SECRET,
+			{ expiresIn: '3h' }
+		);
+		await this.save();
+		return this.jwt;
+	}
+
+	validateJwt(p_token) {
+		try {
+			const decoded = JWT.verify(p_token, process.env.JWT_SECRET);
+			return decoded.id === this.id && decoded.user_name === this.user_name;
+		} catch (err) {
+			return false;
+		}
+	}
+
+	async activateUser() {
+		this.status = USER_STATUS_ENUM[1];
+		return await this.save();
 	}
 }
 
