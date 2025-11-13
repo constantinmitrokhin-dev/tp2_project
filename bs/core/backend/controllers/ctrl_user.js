@@ -1,5 +1,5 @@
 
-const { core_svc_user_create } = require('../services/svc_CoreUser');
+const { core_svc_user_create } = require('../services/services');
 
 
 const core_ctrl_register_user = async (req, res, next) => {
@@ -24,7 +24,7 @@ const core_ctrl_register_user = async (req, res, next) => {
 			password
 		);
 
-		// Responder con el usuario creado (sin el password)
+		// Responder con el usuario creado (sin el password) al pedo mostrarlo
 		const userResponse = {
 			id: newUser.id,
 			name: newUser.name,

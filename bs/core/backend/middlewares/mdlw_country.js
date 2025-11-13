@@ -3,7 +3,7 @@ const {
 	core_svc_country_find_by_id,
 	core_svc_country_get_all,
 	core_svc_countries_find_by_text,
-	core_svc_country_find_by_name } = require('../services/svc_CoreCountry')
+	core_svc_country_find_by_name } = require('../services/services')
 const {
 	MDLW_ERR_COUNTRY_ID_NOT_FOUND,
 	MDLW_ERR_COUNTRIES_NOT_FOUND,
