@@ -11,7 +11,7 @@ router.post('/register', (req, res) => {
 
 
 	// Login
-router.get('/login', (req, res) => {
+router.post('/login', (req, res) => {
 	res.json({ message: 'Cuenta logueada correctamente' });
 });
 

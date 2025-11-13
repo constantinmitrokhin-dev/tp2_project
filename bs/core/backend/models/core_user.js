@@ -167,10 +167,12 @@ class CoreUser extends CoreObject {
 		);
 	}
 
+
 	// Método de instancia para comparar password
 	async comparePassword(p_incoming_pswd) {
 		return await bcrypt.compare(p_incoming_pswd, this.password);
 	}
+
 
 	async createJwt() {
 		this.jwt = await JWT.sign(
@@ -182,14 +184,21 @@ class CoreUser extends CoreObject {
 		return this.jwt;
 	}
 
+
 	validateJwt(p_token) {
 		try {
 			const decoded = JWT.verify(p_token, process.env.JWT_SECRET);
-			return decoded.id === this.id && decoded.user_name === this.user_name;
+			const isValid = decoded.id === this.id && decoded.user_name === this.user_name;
+
+			return { valid: isValid, expired: false, decoded };
 		} catch (err) {
-			return false;
+			if (err.name === 'TokenExpiredError') {
+				return { valid: false, expired: true, decoded: null };
+			}
+			return { valid: false, expired: false, decoded: null };
 		}
 	}
+
 
 	async activateUser() {
 		this.status = USER_STATUS_ENUM[1];

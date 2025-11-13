@@ -10,17 +10,17 @@ router.post('/register', (req, res) => {
 });
 
 
+// Get Business by {url_name}
+router.get('/byUrlName', (req, res) => {
+	const { url_name } = req.query;
+	res.json({ message: `Se recibió el Business url_name: ${url_name}` });
+});
+
+
 	// Get Business by ID
 router.get('/:id', (req, res) => {
 	const businessId = req.params.id;
 	res.json({ message: `Se recibió el Business ID: ${businessId}` });
-});
-
-
-	// Get Business by {url_name}
-router.get('/byUrlName', (req, res) => {
-	const { url_name } = req.body;
-	res.json({ message: `Se recibió el Business url_name: ${url_name}` });
 });
 
 

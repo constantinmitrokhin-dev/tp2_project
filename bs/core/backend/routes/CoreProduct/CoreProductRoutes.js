@@ -10,24 +10,24 @@ router.get('/all', (req, res) => {
 });
 
 
+// Get Core Product by {name}
+router.get('/byName', (req, res) => {
+	const { name } = req.query;
+	res.json({ message: `Se recibió el Core Product name: ${name}` });
+});
+
+
+// Get Core Product by matching {name}, {code} or {description}
+router.get('/byText', (req, res) => {
+	const { name } = req.query;
+	res.json({ message: `Se recibió el Core Product name: ${name}` });
+});
+
+
 	// Get Core Product by {id}
 router.get('/:id', (req, res) => {
-	const productTypeId = req.params.id;
-	res.json({ message: `Se recibió el Core Product ID: ${productTypeId}` });
-});
-
-
-	// Get Core Product by {name}
-router.get('/byName', (req, res) => {
-	const { name } = req.body;
-	res.json({ message: `Se recibió el Core Product name: ${name}` });
-});
-
-
-	// Get Core Product by matching {name}, {code} or {description}
-router.get('/byText', (req, res) => {
-	const { name } = req.body;
-	res.json({ message: `Se recibió el Core Product name: ${name}` });
+	const productId = req.params.id;
+	res.json({ message: `Se recibió el Core Product ID: ${productId}` });
 });
 
 
