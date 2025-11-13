@@ -14,7 +14,7 @@ const {
 	core_ctrl_get_countries } = require('../../controllers/ctrl_coutry');
 
 
-//* Coutry
+//* Country
 	// Get All Countries
 router.get(
 	'/all',
@@ -41,7 +41,7 @@ router.get(
 );
 
 
-	// Get Country and all states by country´s {id}
+	// Get Country by country´s {id}
 router.get(
 	'/:id',
 	core_mdlw_validate_id_format,

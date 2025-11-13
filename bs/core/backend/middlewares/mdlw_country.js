@@ -7,7 +7,7 @@ const {
 const {
 	MDLW_ERR_COUNTRY_ID_NOT_FOUND,
 	MDLW_ERR_COUNTRIES_NOT_FOUND,
-	MDLW_ERR_COUNTRIY_NAME_NOT_FOUND } = require('./utils/msgs_error');
+	MDLW_ERR_COUNTRY_NAME_NOT_FOUND } = require('./utils/msgs_error');
 
 
 const core_mdlw_validate_country_id = async (req, res, next) => {
@@ -67,7 +67,7 @@ const core_mdlw_validate_countries_by_name = async (req, res, next) => {
 		if (!v_country) {
 			return res.status(404).json({
 				status: 404,
-				message: MDLW_ERR_COUNTRIY_NAME_NOT_FOUND
+				message: MDLW_ERR_COUNTRY_NAME_NOT_FOUND
 			});
 		}
 		req.country = v_country;
