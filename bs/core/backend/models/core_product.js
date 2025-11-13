@@ -65,7 +65,7 @@ class CoreProduct extends CoreObject {
 					field: 'name'
 				},
 				valid_until: {
-					type: DataTypes.DATE, // TIMESTAMPTZ
+					type: DataTypes.DATE,
 					allowNull: true,
 					field: 'valid_until',
 					defaultValue: null

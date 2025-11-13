@@ -13,7 +13,7 @@ async function core_conn_initialize_database(sequelize) {
 		sequelize.models = await core_mod_define_models(sequelize, require('sequelize').DataTypes);
 
 		// sincronizar modelos con la base de datos
-		await sequelize.sync({ force: true/*, alter: true*/ });
+		await sequelize.sync(JSON.parse(process.env.SYNC_PARAMS));
 
 		return true;
 	} catch (error) {

@@ -10,17 +10,17 @@ router.get('/all', (req, res) => {
 });
 
 
-	// Get Business Location by {id}
-router.get('/:id', (req, res) => {
-	const productTypeId = req.params.id;
-	res.json({ message: `Se recibió el Business Location ID: ${productTypeId}` });
+// Get Business Location by {name}
+router.get('/byName', (req, res) => {
+	const { name } = req.query;
+	res.json({ message: `Se recibió el Business Location name: ${name}` });
 });
 
 
-	// Get Business Location by {name}
-router.get('/byName', (req, res) => {
-	const { name } = req.body;
-	res.json({ message: `Se recibió el Business Location name: ${name}` });
+	// Get Business Location by {id}
+router.get('/:id', (req, res) => {
+	const businessLocId = req.params.id;
+	res.json({ message: `Se recibió el Business Location ID: ${businessLocId}` });
 });
 
 
