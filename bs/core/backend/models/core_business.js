@@ -2,6 +2,8 @@
 const CoreObject = require('./core_object');
 const CoreCountry = require('./core_country')
 const { QueryTypes } = require('sequelize');
+const { REGEX_USERNAME } = require('./utils/constants');
+const { ERR_REGEX_USERNAME, ERR_NOT_NULL } = require('./utils/msgs_error');
 
 
 class CoreBusiness extends CoreObject {
@@ -28,6 +30,11 @@ class CoreBusiness extends CoreObject {
 					type: DataTypes.INTEGER,
 					allowNull: false,
 					foreignKey: true,
+					validate: {
+						notNull: {
+							msg: `core_business.country_id: ${ERR_NOT_NULL}`
+						}
+					},
 					unique: 'country_fiscal_code',
 					references: {
 						model: CoreCountry,
@@ -39,22 +46,46 @@ class CoreBusiness extends CoreObject {
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: 'country_fiscal_code',
+					validate: {
+						notNull: {
+							msg: `core_business.url_name: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'fiscal_code'
 				},
 				url_name: {
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: true,
+					validate: {
+						notNull: {
+							msg: `core_business.url_name: ${ERR_NOT_NULL}`
+						},
+						is: {
+							args: REGEX_USERNAME,
+							msg: `core_business.url_name: ${ERR_REGEX_USERNAME}`
+						}
+					},
 					field: 'url_name'
 				},
 				trade_name: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_business.trade_name: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'trade_name'
 				},
 				register_name: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_business.register_name: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'register_name'
 				}
 			},

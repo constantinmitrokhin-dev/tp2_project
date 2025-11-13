@@ -17,7 +17,7 @@ module.exports = async function () {
 			last_name: 'Gonzalez',
 			user_name: 'carlita',
 			email: 'carla_gonzalez@mail.com',
-			password: 'qwerty'
+			password: 'qwerty123'
 		},
 	]
 	usersArray.forEach(e => { CoreUser.create({ ...e }); });

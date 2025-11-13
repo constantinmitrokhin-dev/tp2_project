@@ -2,6 +2,7 @@
 const CoreObject = require('./core_object');
 const CoreStateType = require('./core_state_type');
 const { QueryTypes } = require('sequelize');
+const { ERR_NOT_NULL } = require('./utils/msgs_error');
 
 
 class CoreState extends CoreObject {
@@ -27,11 +28,21 @@ class CoreState extends CoreObject {
 				country_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_state.country_id: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'country_id'
 				},
 				type_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_state.type_id: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'type_id',
 					references: {
 						model: CoreStateType,
@@ -42,18 +53,33 @@ class CoreState extends CoreObject {
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: true,
+					validate: {
+						notNull: {
+							msg: `core_state.name: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'name'
 				},
 				iso3: {
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: true,
+					validate: {
+						notNull: {
+							msg: `core_state.iso3: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'iso3'
 				},
 				iso2: {
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: true,
+					validate: {
+						notNull: {
+							msg: `core_state.iso2: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'iso2'
 				},
 			},
@@ -87,5 +113,6 @@ class CoreState extends CoreObject {
 		);
 	}
 }
+
 
 module.exports = CoreState;

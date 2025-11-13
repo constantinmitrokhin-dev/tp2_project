@@ -70,8 +70,7 @@ async function core_mod_define_models(sequelize, DataTypes) {
 	CoreStateType.hasMany(CoreState, { foreignKey: 'type_id', as: 'states' });
 	CoreState.belongsTo(CoreStateType, { foreignKey: 'type_id', as: 'type' });
 
-	// CoreUserBusiness relaciones (relación muchos-a-muchos entre User y Business)
-	CoreUser.hasMany(CoreUserBusiness, { foreignKey: 'user_id', as: 'userBusinesses' });
+	CoreUser.hasOne(CoreUserBusiness, { foreignKey: 'user_id', as: 'userBusinesses' });
 	CoreUserBusiness.belongsTo(CoreUser, { foreignKey: 'user_id', as: 'user' });
 
 	CoreBusiness.hasMany(CoreUserBusiness, { foreignKey: 'business_id', as: 'userBusinesses' });

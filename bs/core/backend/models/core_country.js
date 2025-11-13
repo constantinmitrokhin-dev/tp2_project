@@ -1,6 +1,7 @@
 
 const CoreObject = require('./core_object');
 const { QueryTypes } = require('sequelize');
+const { ERR_NOT_NULL } = require('./utils/msgs_error');
 
 
 class CoreCountry extends CoreObject {
@@ -26,44 +27,84 @@ class CoreCountry extends CoreObject {
 				name: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_country.name: ${ERR_NOT_NULL}`
+						}
+					},
 					unique: true,
 					field: 'name'
 				},
 				iso3: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_country.iso3: ${ERR_NOT_NULL}`
+						}
+					},
 					unique: true,
 					field: 'iso3'
 				},
 				iso2: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_country.iso2: ${ERR_NOT_NULL}`
+						}
+					},
 					unique: true,
 					field: 'iso2'
 				},
 				currency: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_country.currency: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'currency'
 				},
 				currency_name: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_country.currency_name: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'currency_name'
 				},
 				currency_symbol: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_country.currency_symbol: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'currency_symbol'
 				},
 				tld: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_country.tld: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'tld'
 				},
 				phone_code: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					validate: {
+						notNull: {
+							msg: `core_country.phone_code: ${ERR_NOT_NULL}`
+						}
+					},
 					field: 'phone_code'
 				}
 			},

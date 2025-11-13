@@ -6,18 +6,23 @@ const createBusinesses = require('./CoreBusiness/CreateCoreBusinesses.js');
 const createUserBusiness = require('./CoreUserBusiness/CreateCoreUserBusiness.js');
 
 module.exports = async function (sequelize) {
-	// Run seeders sequentially and add explicit delays where needed.
+	//
 	await createCountries();
+	await new Promise((resolve) => setTimeout(resolve, 200));
+
+	//
 	await createUsers();
-
-	// Small delay before creating businesses (keeps original intent of a 300ms wait)
 	await new Promise((resolve) => setTimeout(resolve, 300));
+
 	await createBusinesses();
-
-	// Add an explicit delay BEFORE running createProducts as requested.
 	await new Promise((resolve) => setTimeout(resolve, 300));
-	await createProducts(sequelize);
 
-	// Create User - Business associations.
+	//
+	await createProducts(sequelize);
+	await new Promise((resolve) => setTimeout(resolve, 300));
+
+	//
 	await createUserBusiness();
+	await new Promise((resolve) => setTimeout(resolve, 300));
+
 };

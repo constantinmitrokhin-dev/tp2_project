@@ -13,7 +13,11 @@ async function core_start_server() {
 		// Inicializar base de datos con tipos personalizados
 		await core_conn_ensure_database();
 		await core_conn_initialize_database(sequelize);
-		await seeds(sequelize);
+
+		if (process.env.SYNC_PARAMS !== '{"alter":true}') {
+			console.log('Poblando la DB...');
+			await seeds(sequelize);
+		}
 
 		// Iniciar servidor
 		server.listen(PORT, () => {
