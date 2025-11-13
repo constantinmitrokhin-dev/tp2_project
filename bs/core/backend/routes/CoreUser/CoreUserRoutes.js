@@ -1,13 +1,12 @@
 
 const { Router } = require('express');
 const router = Router();
+const { core_ctrl_register_user } = require('../../controllers/ctrl_user');
 
 
 //* User
 	// Create new Account
-router.post('/register', (req, res) => {
-	res.json({ message: 'Cuenta creada correctamente' });
-});
+router.post('/register', core_ctrl_register_user);
 
 
 	// Login
