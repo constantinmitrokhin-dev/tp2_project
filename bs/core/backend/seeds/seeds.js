@@ -15,7 +15,7 @@ module.exports = async function (sequelize) {
 	await new Promise((resolve) => setTimeout(resolve, 300));
 
 	await createBusinesses();
-	await new Promise((resolve) => setTimeout(resolve, 300));
+	await new Promise((resolve) => setTimeout(resolve, 400));
 
 	//
 	await createProducts(sequelize);
