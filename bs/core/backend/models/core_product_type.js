@@ -1,26 +1,25 @@
 
-const CoreObject = require('./core_object');
-const { QueryTypes } = require('sequelize');
+const CoreType = require('./core_type');
 const { ERR_NOT_NULL } = require('./utils/msgs_error');
 
 
-class CoreType extends CoreObject {
+class CoreProductType extends CoreType {
 	static initModel(sequelize, DataTypes) {
 		super.init(
 			{
 				id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
-					foreignKey: true,
 					primaryKey: true,
+					foreignKey: true,
 					references: {
-						model: CoreObject,
+						model: CoreType,
 						key: 'id'
 					},
 					field: 'id'
 				},
 				ht_data: {
-					type: 'ht_data', // usa el tipo personalizado definido en la DB
+					type: 'ht_data',
 					allowNull: false,
 					field: 'ht_data'
 				},
@@ -30,7 +29,7 @@ class CoreType extends CoreObject {
 					unique: 'kind_name_business_id',
 					validate: {
 						notNull: {
-							msg: `core_type.name: ${ERR_NOT_NULL}`
+							msg: `core_product_type.name: ${ERR_NOT_NULL}`
 						}
 					},
 					field: 'name'
@@ -47,7 +46,7 @@ class CoreType extends CoreObject {
 					unique: 'kind_name_business_id',
 					validate: {
 						notNull: {
-							msg: `core_type.business_id: ${ERR_NOT_NULL}`
+							msg: `core_product_type.business_id: ${ERR_NOT_NULL}`
 						}
 					},
 					field: 'business_id'
@@ -55,41 +54,36 @@ class CoreType extends CoreObject {
 			},
 			{
 				sequelize,
-				modelName: 'CoreType',
-				tableName: 'core_type',
+				modelName: 'CoreProductType',
+				tableName: 'core_product_type',
 				timestamps: false,
-				indexes: [
-					{
-						name: 'kind_name_business_id',
-						unique: true,
-						fields: ['name', 'business_id', 'kind']
-					}
-				],
 				relationships: {
 					type: 'inheritance',
-					parent: CoreObject,
+					parent: CoreType,
 					foreignKey: 'id'
 				},
 				hooks: {
 					beforeValidate: async (instance, options) => {
-						// Este hook corre ANTES de la validación de notNull
 						const txOpt = options?.transaction ? { transaction: options.transaction } : {};
+						try {
+							const parent = await CoreType.create({name: instance.name, kind: instance.kind, business_id: instance.business_id}, txOpt);
 
-						const [parent] = await sequelize.query(
-							`INSERT INTO core_object DEFAULT VALUES RETURNING id, ht_data`,
-							{ type: QueryTypes.SELECT, ...txOpt }
-						);
-
-						if (!parent) throw new Error('No se pudo crear core_object');
-
-						instance.id = parent.id;
-						instance.ht_data = parent.ht_data;
-					},
-				},
+							if (!parent) throw new Error('No se pudo crear core_type');
+							instance.id          = parent.id;
+							instance.ht_data     = parent.ht_data;
+							instance.name        = parent.name;
+							instance.kind        = parent.kind;
+							instance.business_id = parent.business_id;
+						} catch (error) {
+							console.error('Error creando CoreType para CoreProductType:', error);
+							throw new Error('Error creando CoreType para CoreProductType:');
+						}
+					}
+				}
 			}
 		);
 	}
 }
 
 
-module.exports = CoreType;
+module.exports = CoreProductType;

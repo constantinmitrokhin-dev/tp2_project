@@ -3,6 +3,7 @@ const { Router } = require('express');
 const router = Router();
 const CoreUserRoutes = require('./CoreUser/CoreUserRoutes');
 const CoreCoutryRoutes = require('./CoreCoutry/CoreCountryRoutes');
+const CoreStateRoutes = require('./CoreState/CoreStateRoutes');
 const CoreBusinessRoutes = require('./CoreBusiness/CoreBusinessRoutes');
 const CoreProductTypeRoutes = require('./CoreProductType/CoreProductTypeRoutes');
 const CoreBusinessLocationRoutes = require('./CoreBusinessLocation/CoreBusinessLocationRoutes');
@@ -16,6 +17,10 @@ router.use('/user', CoreUserRoutes);
 
 	//* Coutry - Services
 router.use('/country', CoreCoutryRoutes);
+
+
+	//* State - Services
+router.use('/state', CoreStateRoutes);
 
 
 	//* Business - Services

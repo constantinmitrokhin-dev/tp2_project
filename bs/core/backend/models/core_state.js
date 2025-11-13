@@ -1,12 +1,11 @@
 
 const CoreObject = require('./core_object');
-const CoreCountry = require('./core_country')
+const CoreStateType = require('./core_state_type');
 const { QueryTypes } = require('sequelize');
-const { REGEX_USERNAME } = require('./utils/constants');
-const { ERR_REGEX_USERNAME, ERR_NOT_NULL } = require('./utils/msgs_error');
+const { ERR_NOT_NULL } = require('./utils/msgs_error');
 
 
-class CoreBusiness extends CoreObject {
+class CoreState extends CoreObject {
 	static initModel(sequelize, DataTypes) {
 		super.init(
 			{
@@ -29,70 +28,65 @@ class CoreBusiness extends CoreObject {
 				country_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
-					foreignKey: true,
 					validate: {
 						notNull: {
-							msg: `core_business.country_id: ${ERR_NOT_NULL}`
+							msg: `core_state.country_id: ${ERR_NOT_NULL}`
 						}
-					},
-					unique: 'country_fiscal_code',
-					references: {
-						model: CoreCountry,
-						key: 'id'
 					},
 					field: 'country_id'
 				},
-				fiscal_code: {
-					type: DataTypes.STRING,
+				type_id: {
+					type: DataTypes.INTEGER,
 					allowNull: false,
-					unique: 'country_fiscal_code',
 					validate: {
 						notNull: {
-							msg: `core_business.url_name: ${ERR_NOT_NULL}`
+							msg: `core_state.type_id: ${ERR_NOT_NULL}`
 						}
 					},
-					field: 'fiscal_code'
+					field: 'type_id',
+					references: {
+						model: CoreStateType,
+						key: 'id'
+					}
 				},
-				url_name: {
+				name: {
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: true,
 					validate: {
 						notNull: {
-							msg: `core_business.url_name: ${ERR_NOT_NULL}`
-						},
-						is: {
-							args: REGEX_USERNAME,
-							msg: `core_business.url_name: ${ERR_REGEX_USERNAME}`
+							msg: `core_state.name: ${ERR_NOT_NULL}`
 						}
 					},
-					field: 'url_name'
+					field: 'name'
 				},
-				trade_name: {
+				iso3: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					unique: true,
 					validate: {
 						notNull: {
-							msg: `core_business.trade_name: ${ERR_NOT_NULL}`
+							msg: `core_state.iso3: ${ERR_NOT_NULL}`
 						}
 					},
-					field: 'trade_name'
+					field: 'iso3'
 				},
-				register_name: {
+				iso2: {
 					type: DataTypes.STRING,
 					allowNull: false,
+					unique: true,
 					validate: {
 						notNull: {
-							msg: `core_business.register_name: ${ERR_NOT_NULL}`
+							msg: `core_state.iso2: ${ERR_NOT_NULL}`
 						}
 					},
-					field: 'register_name'
-				}
+					field: 'iso2'
+				},
 			},
 			{
 				sequelize,
-				modelName: 'CoreBusiness',
-				tableName: 'core_business',
+				modelName: 'CoreState',
+				tableName: 'core_state',
 				timestamps: false,
 				relationships: {
 					type: 'inheritance',
@@ -120,4 +114,5 @@ class CoreBusiness extends CoreObject {
 	}
 }
 
-module.exports = CoreBusiness;
+
+module.exports = CoreState;

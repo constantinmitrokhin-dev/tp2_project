@@ -1,11 +1,11 @@
 
 const CoreObject = require('./core_object');
+const CoreUser = require('./core_user');
 const CoreBusiness = require('./core_business');
 const { QueryTypes } = require('sequelize');
-const { ERR_NOT_NULL } = require('./utils/msgs_error');
 
 
-class CoreBusinessLocation extends CoreObject {
+class CoreUserBusiness extends CoreObject {
 	static initModel(sequelize, DataTypes) {
 		super.init(
 			{
@@ -21,53 +21,40 @@ class CoreBusinessLocation extends CoreObject {
 					field: 'id'
 				},
 				ht_data: {
-					type: 'ht_data', // usa el tipo personalizado definido en la DB
+					type: 'ht_data',
 					allowNull: false,
 					field: 'ht_data'
+				},
+				user_id: {
+					type: DataTypes.INTEGER,
+					allowNull: false,
+					unique: true,
+					references: {
+						model: CoreUser,
+						key: 'id'
+					}
 				},
 				business_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
-					validate: {
-						notNull: {
-							msg: `core_business_location.business_id: ${ERR_NOT_NULL}`
-						}
-					},
 					references: {
 						model: CoreBusiness,
 						key: 'id'
-					},
-					field: 'business_id'
+					}
 				},
-				name: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					validate: {
-						notNull: {
-							msg: `core_business_location.name: ${ERR_NOT_NULL}`
-						}
-					},
-					field: 'name'
-				},
-				address: {
-					type: 'address',
-					allowNull: true,
-					field: 'address'
-				},
+				role: {
+					type: DataTypes.TEXT,
+					allowNull: true
+				}
 			},
 			{
 				sequelize,
-				modelName: 'CoreBusinessLocation',
-				tableName: 'core_business_location',
+				modelName: 'CoreUserBusiness',
+				tableName: 'core_user_business',
+				schema: 'public',
 				timestamps: false,
-				relationships: {
-					type: 'inheritance',
-					parent: CoreObject,
-					foreignKey: 'id'
-				},
 				hooks: {
 					beforeValidate: async (instance, options) => {
-						// Este hook corre ANTES de la validación de notNull
 						const txOpt = options?.transaction ? { transaction: options.transaction } : {};
 
 						const [parent] = await sequelize.query(
@@ -79,12 +66,13 @@ class CoreBusinessLocation extends CoreObject {
 
 						instance.id = parent.id;
 						instance.ht_data = parent.ht_data;
-					},
-				},
+					}
+				}
 			}
 		);
+		return this;
 	}
 }
 
 
-module.exports = CoreBusinessLocation;
+module.exports = CoreUserBusiness;

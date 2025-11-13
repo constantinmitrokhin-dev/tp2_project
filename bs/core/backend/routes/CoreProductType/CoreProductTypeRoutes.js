@@ -10,18 +10,18 @@ router.get('/all', (req, res) => {
 });
 
 
+// Get Product Type by {name}
+router.get('/byName', (req, res) => {
+	const { name } = req.query;
+	res.json({ message: `Se recibió el Product Type name: ${name}` });
+});
+
+
 	// Get Product Type by {id}
 router.get('/:id', (req, res) => {
 	const productTypeId = req.params.id;
 
 	res.json({ message: `Se recibió el Product Type ID: ${productTypeId}` });
-});
-
-
-	// Get Product Type by {name}
-router.get('/byName', (req, res) => {
-	const { name } = req.body;
-	res.json({ message: `Se recibió el Product Type name: ${name}` });
 });
 
 
