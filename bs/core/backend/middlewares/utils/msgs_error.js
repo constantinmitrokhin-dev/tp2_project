@@ -22,4 +22,8 @@ module.exports = {
 	MDLW_ERR_INVALID_CURRENT_PASSWORD: 'Current password is incorrect.',
 	MDLW_ERR_PASSWORD_UPDATE_FAILED: 'Password update failed. Please try again.',
 	MDLW_ERR_USER_DELETE_FAILED: 'User deletion failed. Please try again.',
+	MDLW_ERR_BUSINESS_ID_NOT_FOUND: 'Business not found. Please verify the provided business ID.',
+	MDLW_ERR_BUSINESS_URL_NAME_NOT_FOUND: 'Business not found. Please verify the provided URL name.',
+	MDLW_ERR_BUSINESS_ALREADY_EXISTS: 'Business already exists. The URL name or fiscal code is already registered.',
+	MDLW_ERR_BUSINESS_MISSING_FIELDS: 'Missing required fields. Please provide all required business information.',
 };
