@@ -1,6 +1,8 @@
 
 const { Router } = require('express');
 const router = Router();
+const { core_mdlw_validate_business_id } = require('../../middlewares/mdlw_business');
+const { core_mdlw_validate_id_format } = require('../../middlewares/mdlw_validate_format');
 
 
 //* Business
@@ -18,7 +20,10 @@ router.get('/byUrlName', (req, res) => {
 
 
 	// Get Business by ID
-router.get('/:id', (req, res) => {
+router.get(
+	'/:id',
+	 core_mdlw_validate_id_format, //! TODO: Validar por Usuario Autenticado
+	 (req, res) => {
 	const businessId = req.params.id;
 	res.json({ message: `Se recibió el Business ID: ${businessId}` });
 });
