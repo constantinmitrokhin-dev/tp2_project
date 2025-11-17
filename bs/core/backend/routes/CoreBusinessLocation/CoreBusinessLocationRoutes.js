@@ -1,31 +1,42 @@
 
 const { Router } = require('express');
 const router = Router();
+const {
+	core_mdlw_validate_id_format,
+	core_mdlw_validate_text_search_format } = require('../../middlewares/mdlw_validate_format');
 
 
 //* Business Location
 	// Get All Business Locations
-router.get('/all', (req, res) => {
+router.get(
+	'/all',
+	core_mdlw_validate_text_search_format,
+	(req, res) => {
 	res.json({ message: 'Se obtienen todos los paises' });
 });
 
 
 // Get Business Location by {name}
-router.get('/byName', (req, res) => {
+router.get('/byName',
+	(req, res) => {
 	const { name } = req.query;
 	res.json({ message: `Se recibió el Business Location name: ${name}` });
 });
 
 
 	// Get Business Location by {id}
-router.get('/:id', (req, res) => {
+router.get(
+	'/:id',
+	core_mdlw_validate_id_format,
+	 (req, res) => {
 	const businessLocId = req.params.id;
 	res.json({ message: `Se recibió el Business Location ID: ${businessLocId}` });
 });
 
 
 	// Create new Business Location
-router.post('/create',(req, res) => {
+router.post('/create',
+	(req, res) => {
 	res.json({ message: `Creó nuevo Business Location` });
 });
 
