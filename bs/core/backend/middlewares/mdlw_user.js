@@ -5,6 +5,7 @@ const {
 	core_svc_user_find_active_by_user_name_or_email,
 	core_svc_user_update,
 	core_svc_user_delete } = require('../services/svc_CoreUser');
+const { core_mdlw_validate_required_fields } = require('./mdlw_validate_format');
 const {
 	MDLW_ERR_USER_ID_NOT_FOUND,
 	MDLW_ERR_USER_ALREADY_EXISTS,
@@ -23,16 +24,6 @@ const {
 	MDLW_ERR_USER_DELETE_FAILED } = require('./utils/msgs_error');
 
 
-///* ===============================================
-//*  FUNCIONES AUXILIARES REUTILIZABLES
-//* ===============================================
-
-const validateRequiredFields = (userData, requiredFields) => {
-	return requiredFields.every(field => {
-		const value = userData[field];
-		return value !== undefined && value !== null && value !== '';
-	});
-};
 
 const checkUserExists = async (user_name, email) => {
 	const v_existing_user = await core_svc_user_find_active_by_user_name_or_email(user_name);
@@ -148,7 +139,7 @@ const core_mdlw_validate_user_id = async (req, res, next) => {
 const core_mdlw_validate_registration_fields = (req, res, next) => {
 	const requiredFields = ['name', 'last_name', 'user_name', 'email', 'password'];
 	
-	if (!validateRequiredFields(req.body, requiredFields)) {
+	if (!core_mdlw_validate_required_fields(req.body, requiredFields)) {
 		return res.status(400).json({
 			status: 400,
 			message: MDLW_ERR_USER_MISSING_FIELDS
@@ -225,7 +216,7 @@ const core_mdlw_register_user = async (req, res, next) => {
 	try {
 		// Validar campos requeridos
 		const requiredFields = ['name', 'last_name', 'user_name', 'email', 'password'];
-		if (!validateRequiredFields(req.body, requiredFields)) {
+		if (!core_mdlw_validate_required_fields(req.body, requiredFields)) {
 			return res.status(400).json({
 				status: 400,
 				message: MDLW_ERR_USER_MISSING_FIELDS
@@ -282,7 +273,7 @@ const core_mdlw_register_user = async (req, res, next) => {
 const core_mdlw_validate_login_fields = (req, res, next) => {
 	const requiredFields = ['login', 'password'];
 	
-	if (!validateRequiredFields(req.body, requiredFields)) {
+	if (!core_mdlw_validate_required_fields(req.body, requiredFields)) {
 		return res.status(400).json({
 			status: 400,
 			message: MDLW_ERR_LOGIN_MISSING_FIELDS
@@ -361,7 +352,7 @@ const core_mdlw_login_user = async (req, res, next) => {
 	try {
 		// Validar campos requeridos
 		const requiredFields = ['login', 'password'];
-		if (!validateRequiredFields(req.body, requiredFields)) {
+		if (!core_mdlw_validate_required_fields(req.body, requiredFields)) {
 			return res.status(400).json({
 				status: 400,
 				message: MDLW_ERR_LOGIN_MISSING_FIELDS
@@ -632,7 +623,7 @@ module.exports = {
 	core_mdlw_update_user_data,
 	
 	// Funciones auxiliares (reutilizables)
-	validateRequiredFields,
+	core_mdlw_validate_required_fields,
 	checkUserExists,
 	createAndActivateUser,
 	handleSequelizeError,

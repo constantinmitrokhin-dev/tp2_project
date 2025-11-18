@@ -84,6 +84,11 @@ class CoreBusinessLocation extends CoreObject {
 			}
 		);
 	}
+
+
+	static getRequiredFields(){
+		return ['business_id', 'name'];
+	}
 }
 
 

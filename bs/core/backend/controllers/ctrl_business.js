@@ -1,67 +1,28 @@
 
 ///* ===============================================
-//*  CONTROLADORES DE BUSINESS
-//* ===============================================
-
-/**
- * Controlador: Responde con el business registrado exitosamente
- */
-const ctrl_business_register = (req, res) => {
-	res.status(201).json({
-		status: 201,
-		message: `Business created successfully: ${req.registeredBusiness.trade_name}`,
-		data: {
-			id: req.registeredBusiness.id,
-			url_name: req.registeredBusiness.url_name,
-			trade_name: req.registeredBusiness.trade_name,
-			register_name: req.registeredBusiness.register_name,
-			fiscal_code: req.registeredBusiness.fiscal_code,
-			country_id: req.registeredBusiness.country_id
-		}
-	});
-};
+//*  CONTROLLERS BUSINESS
+//* ================================================
 
 
-/**
- * Controlador: Responde con el business encontrado por ID
- */
-const ctrl_business_get_by_id = (req, res) => {
-	res.status(200).json({
-		status: 200,
-		message: 'Business found successfully',
-		data: {
-			id: req.business.id,
-			url_name: req.business.url_name,
-			trade_name: req.business.trade_name,
-			register_name: req.business.register_name,
-			fiscal_code: req.business.fiscal_code,
-			country_id: req.business.country_id
-		}
-	});
-};
+const core_ctrl_get_business = (req, res) => {
+	const { ht_data, ...rest } = req.business.get({ plain: true });
+	return res.status(req.status).json({ business: rest, status });
+}
 
 
-/**
- * Controlador: Responde con el business encontrado por url_name
- */
-const ctrl_business_get_by_url_name = (req, res) => {
-	res.status(200).json({
-		status: 200,
-		message: 'Business found successfully',
-		data: {
-			id: req.business.id,
-			url_name: req.business.url_name,
-			trade_name: req.business.trade_name,
-			register_name: req.business.register_name,
-			fiscal_code: req.business.fiscal_code,
-			country_id: req.business.country_id
-		}
-	});
-};
+const core_ctrl_get_business_with_locations = (req, res) => {
+	const { ht_data, ...rest } = req.business.get({ plain: true });
+	if (rest.businessLocation && Array.isArray(rest.businessLocation)) {
+        rest.businessLocation = rest.businessLocation.map(loc => {
+            const { id, ht_data, ...cleanedLoc } = loc;
+            return cleanedLoc;
+        });
+    }
+	return res.status(req.status).json({ business: rest });
+}
 
 
 module.exports = {
-	ctrl_business_register,
-	ctrl_business_get_by_id,
-	ctrl_business_get_by_url_name
+	core_ctrl_get_business,
+	core_ctrl_get_business_with_locations
 };
