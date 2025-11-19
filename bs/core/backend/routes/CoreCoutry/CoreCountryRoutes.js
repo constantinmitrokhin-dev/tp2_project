@@ -11,7 +11,7 @@ const {
 	core_mdlw_validate_countries_by_name } = require('../../middlewares/mdlw_country');
 const {
 	core_ctrl_get_country,
-	core_ctrl_get_countries } = require('../../controllers/ctrl_coutry');
+	core_ctrl_get_countries } = require('../../controllers/ctrl_country');
 
 
 //* Country

@@ -13,11 +13,11 @@ const core_ctrl_get_business = (req, res) => {
 const core_ctrl_get_business_with_locations = (req, res) => {
 	const { ht_data, ...rest } = req.business.get({ plain: true });
 	if (rest.businessLocation && Array.isArray(rest.businessLocation)) {
-        rest.businessLocation = rest.businessLocation.map(loc => {
-            const { id, ht_data, ...cleanedLoc } = loc;
-            return cleanedLoc;
-        });
-    }
+		rest.businessLocation = rest.businessLocation.map(loc => {
+			const { id, ht_data, ...cleanedLoc } = loc;
+			return cleanedLoc;
+		});
+	}
 	return res.status(req.status).json({ business: rest });
 }
 
