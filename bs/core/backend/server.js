@@ -19,7 +19,7 @@ server.use((req, res, next) => {
 	res.header('Access-Control-Allow-Credentials', 'true');
 	// eslint-disable-next-line max-len
 	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-	res.header('Access-Control-Allow-Methods', ALLOWED_METHODS.split(','));
+	res.header('Access-Control-Allow-Methods', ALLOWED_METHODS);
 	// res.cookie('token', jwt, {
 	// 	httpOnly: true,
 	// 	secure: true,       // obligatorio en HTTPS
