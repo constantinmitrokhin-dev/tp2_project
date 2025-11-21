@@ -22,4 +22,12 @@ module.exports = {
 	MDLW_ERR_INVALID_CURRENT_PASSWORD: 'Current password is incorrect.',
 	MDLW_ERR_PASSWORD_UPDATE_FAILED: 'Password update failed. Please try again.',
 	MDLW_ERR_USER_DELETE_FAILED: 'User deletion failed. Please try again.',
+	MDLW_ERR_PRODUCT_ID_NOT_FOUND: 'Product not found. Please verify the provided product ID.',
+	MDLW_ERR_PRODUCT_ALREADY_EXISTS: 'Product already exists. A product with the same name and type already exists for this business.',
+	MDLW_ERR_PRODUCT_CREATION_FAILED: 'Product creation failed. Please try again.',
+	MDLW_ERR_PRODUCT_MISSING_FIELDS: 'Missing required fields. Please provide all required product information.',
+	MDLW_ERR_PRODUCT_UPDATE_FAILED: 'Product update failed. Please try again.',
+	MDLW_ERR_PRODUCT_DELETE_FAILED: 'Product deletion failed. Please try again.',
+	MDLW_ERR_PRODUCTS_NOT_FOUND: 'Products not found.',
+	MDLW_ERR_BUSINESS_ID_REQUIRED: 'Business ID is required for product operations.',
 };
