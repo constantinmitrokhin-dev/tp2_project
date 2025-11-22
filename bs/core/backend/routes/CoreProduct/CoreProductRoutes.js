@@ -1,52 +1,45 @@
 
 const { Router } = require('express');
 const router = Router();
+const {
+	core_mdlw_validate_product_id,
+	core_mdlw_get_products_by_business,
+	core_mdlw_get_products_by_text,
+	core_mdlw_get_product_by_name,
+	core_mdlw_create_product,
+	core_mdlw_update_product,
+	core_mdlw_delete_product
+} = require('../../middlewares/mdlw_product');
+const { core_mdlw_validate_id_format } = require('../../middlewares/mdlw_validate_format');
+const {
+	core_ctrl_get_product,
+	core_ctrl_get_products,
+	core_ctrl_create_product,
+	core_ctrl_update_product,
+	core_ctrl_delete_product
+} = require('../../controllers/ctrl_product');
 
 
-//* Core Product
-	// Get All Core Products
-router.get('/all', (req, res) => {
-	res.json({ message: 'Se obtienen todos los paises' });
-});
+//* Get All Products by business_id
+router.get('/all', core_mdlw_get_products_by_business, core_ctrl_get_products);
 
+//* Get Products by text search (name, code, or description)
+router.get('/byText', core_mdlw_get_products_by_text, core_ctrl_get_products);
 
-// Get Core Product by {name}
-router.get('/byName', (req, res) => {
-	const { name } = req.query;
-	res.json({ message: `Se recibió el Core Product name: ${name}` });
-});
+//* Get Product by exact name
+router.get('/byName', core_mdlw_get_product_by_name, core_ctrl_get_product);
 
+//* Get Product by ID
+router.get('/:id', core_mdlw_validate_id_format, core_mdlw_validate_product_id, core_ctrl_get_product);
 
-// Get Core Product by matching {name}, {code} or {description}
-router.get('/byText', (req, res) => {
-	const { name } = req.query;
-	res.json({ message: `Se recibió el Core Product name: ${name}` });
-});
+//* Create new Product
+router.post('/create', core_mdlw_create_product, core_ctrl_create_product);
 
+//* Update Product by ID
+router.patch('/update/:id', core_mdlw_validate_id_format, core_mdlw_validate_product_id, core_mdlw_update_product, core_ctrl_update_product);
 
-	// Get Core Product by {id}
-router.get('/:id', (req, res) => {
-	const productId = req.params.id;
-	res.json({ message: `Se recibió el Core Product ID: ${productId}` });
-});
-
-
-	// Create new Core Product
-router.post('/create',(req, res) => {
-	res.json({ message: `Creó nuevo Core Product` });
-});
-
-
-	// Update Core Product
-router.patch('/update', (req, res) => {
-	res.json({ message: `Se modificó el Core Product Existente` });
-});
-
-
-	// Delete Core Product
-router.delete('/delete', (req, res) => {
-	res.json({ message: `Se eleminó el Core Product Existente` });
-});
+//* Delete Product by ID (soft delete)
+router.delete('/delete/:id', core_mdlw_validate_id_format, core_mdlw_validate_product_id, core_mdlw_delete_product, core_ctrl_delete_product);
 
 
 module.exports = router;
