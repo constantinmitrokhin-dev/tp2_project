@@ -1,0 +1,452 @@
+{
+	"info": {
+		"name": "Product API Tests",
+		"description": "Complete test collection for Product API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "businessId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "typeId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "productId",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Create Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Product created successfully\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('product');",
+							"    pm.expect(jsonData.product).to.have.property('id');",
+							"    pm.expect(jsonData.product).to.have.property('name');",
+							"    pm.expect(jsonData.product).to.not.have.property('ht_data');",
+							"    ",
+							"    // Save product ID for other requests",
+							"    pm.collectionVariables.set('productId', jsonData.product.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type_id\": {{typeId}},\n  \"business_id\": {{businessId}},\n  \"name\": \"Laptop Dell XPS 15\",\n  \"code\": \"DELL-XPS-15\",\n  \"description\": \"Laptop de alto rendimiento con procesador Intel i7\",\n  \"price\": 1299.99\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/product/create",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "create"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Get All Products by Business",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Products retrieved successfully\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('products');",
+							"    pm.expect(jsonData).to.have.property('count');",
+							"    pm.expect(jsonData.products).to.be.an('array');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/product/all?business_id={{businessId}}",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "all"],
+					"query": [
+						{
+							"key": "business_id",
+							"value": "{{businessId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Get Product by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Product retrieved successfully\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('product');",
+							"    pm.expect(jsonData.product).to.have.property('id');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/product/{{productId}}",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "{{productId}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. Search Products by Text",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Search results returned\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('products');",
+							"    pm.expect(jsonData.products).to.be.an('array');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/product/byText?business_id={{businessId}}&text=laptop",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "byText"],
+					"query": [
+						{
+							"key": "business_id",
+							"value": "{{businessId}}"
+						},
+						{
+							"key": "text",
+							"value": "laptop"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. Get Product by Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Product found by name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('product');",
+							"    pm.expect(jsonData.product.name).to.eql('Laptop Dell XPS 15');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/product/byName?business_id={{businessId}}&type_id={{typeId}}&name=Laptop Dell XPS 15",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "byName"],
+					"query": [
+						{
+							"key": "business_id",
+							"value": "{{businessId}}"
+						},
+						{
+							"key": "type_id",
+							"value": "{{typeId}}"
+						},
+						{
+							"key": "name",
+							"value": "Laptop Dell XPS 15"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6. Update Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Product updated successfully\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('product');",
+							"    pm.expect(jsonData.product.price).to.eql(1199.99);",
+							"    pm.expect(jsonData.product.description).to.include('Oferta');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"price\": 1199.99,\n  \"description\": \"Laptop de alto rendimiento - Oferta especial\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/product/update/{{productId}}",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "update", "{{productId}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "7. Delete Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Product deleted successfully\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.include('deleted successfully');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/product/delete/{{productId}}",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "delete", "{{productId}}"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Error: Missing Required Fields",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message returned\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Test Product\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/product/create",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "create"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Error: Product Already Exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"",
+							"pm.test(\"Duplicate product error\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.include('already exists');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type_id\": {{typeId}},\n  \"business_id\": {{businessId}},\n  \"name\": \"Laptop Dell XPS 15\",\n  \"code\": \"DELL-XPS-15\",\n  \"description\": \"Duplicate product\",\n  \"price\": 999.99\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/product/create",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "create"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Error: Product Not Found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Not found message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/product/99999",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "99999"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Error: Missing Business ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Business ID required error\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.include('Business ID');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/product/all",
+					"host": ["{{baseUrl}}"],
+					"path": ["product", "all"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+
