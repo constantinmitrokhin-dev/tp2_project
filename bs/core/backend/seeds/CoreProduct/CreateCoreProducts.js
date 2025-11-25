@@ -9,6 +9,7 @@ module.exports = async function (sequelize) {
 	const productsArray = await loader_build_products_from_files();
 	productsArray.sort((a, b) => a._category.localeCompare(b._category));
 	const business = await CoreBusiness.findOne({ where: { url_name: 'la_espiga' } });
+	const v_business_id = business.id;
 
 	let currentCategory = null;
 	for (let i = 0; i < productsArray.length; i++) {
@@ -16,7 +17,7 @@ module.exports = async function (sequelize) {
 		if((!currentCategory || currentCategory.name !== product._category) && product._category !== undefined){
 			await sequelize.transaction(async (t) => {
 				currentCategory = await CoreProductType.create(
-					{name: `${product._category}`, business_id: business.id, kind: null},
+					{name: `${product._category}`, business_id: v_business_id, kind: null},
 					{transaction: t}
 				);
 			});
@@ -24,7 +25,7 @@ module.exports = async function (sequelize) {
 
 		const newProduct = CoreProduct.create({
 			type_id: currentCategory.id,
-			business_id: business.id,
+			business_id: v_business_id,
 			name: !product._name ? product._descriptions[0] : product._name,
 			code: product._code,
 			description: Array.isArray(product._descriptions) ? product._descriptions.join(', ') : product._descriptions,
@@ -32,4 +33,5 @@ module.exports = async function (sequelize) {
 		});
 
 	}
+	await sequelize.query(`UPDATE core_product_type SET business_id = ${v_business_id};`);
 }

@@ -113,6 +113,7 @@ const updateUserData = async (user, updateData) => {
 
 const core_mdlw_validate_user_id = async (req, res, next) => {
 	const v_user = await core_svc_user_find_by_id(req.validatedId);
+
 	if (!v_user) {
 		return res.status(404).json({
 			status: 404,
@@ -273,7 +274,7 @@ const core_mdlw_find_user_by_login = async (req, res, next) => {
 			});
 		}
 		
-		req.foundUser = v_user;
+		req.user = v_user;
 		next();
 	} catch (error) {
 		next(error);
@@ -284,7 +285,7 @@ const core_mdlw_find_user_by_login = async (req, res, next) => {
 const core_mdlw_verify_password = async (req, res, next) => {
 	try {
 		const { password } = req.body;
-		const v_user = req.foundUser;
+		const v_user = req.user;
 		
 		const isPasswordValid = await validateUserPassword(v_user, password);
 		
@@ -304,7 +305,7 @@ const core_mdlw_verify_password = async (req, res, next) => {
 
 const core_mdlw_generate_token = async (req, res, next) => {
 	try {
-		const v_user = req.foundUser;
+		const v_user = req.user;
 		
 		const token = await generateUserToken(v_user);
 		
@@ -315,7 +316,7 @@ const core_mdlw_generate_token = async (req, res, next) => {
 			});
 		}
 		
-		req.authenticatedUser = v_user;
+		req.user = v_user;
 		req.token = token;
 		next();
 	} catch (error) {

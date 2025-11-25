@@ -22,8 +22,9 @@ module.exports = async function (sequelize) {
 
 	//
 	await createBusinesses();
-	await new Promise((resolve) => setTimeout(resolve, 400));
+	await new Promise((resolve) => setTimeout(resolve, 300));
 
+	
 	//
 	await createProducts(sequelize);
 	await new Promise((resolve) => setTimeout(resolve, 300));
@@ -31,5 +32,4 @@ module.exports = async function (sequelize) {
 	//
 	await createUserBusiness();
 	await new Promise((resolve) => setTimeout(resolve, 300));
-
 };
