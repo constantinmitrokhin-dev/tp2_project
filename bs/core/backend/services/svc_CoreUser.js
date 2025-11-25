@@ -35,16 +35,8 @@ const core_svc_user_find_by_id = async (p_user_id) => {
 
 
 //* Create a new CoreUser record with the provided data
-const core_svc_user_create = async (p_name, p_middle_name = null, p_last_name, p_user_name, p_email, p_password) => {
-	return await CoreUser.create(
-		{
-			name:        p_name,
-			middle_name: p_middle_name,
-			last_name:   p_last_name,
-			user_name:   p_user_name,
-			email:       p_email,
-			password:    p_password
-		});
+const core_svc_user_create = async ({name, middle_name = null, last_name, user_name, email, password}) => {
+	return await CoreUser.create({ name, middle_name, last_name, user_name, email, password });
 }
 
 

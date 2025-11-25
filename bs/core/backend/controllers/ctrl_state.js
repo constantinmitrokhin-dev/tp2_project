@@ -22,4 +22,4 @@ const core_ctrl_get_states = (req, res) => {
 module.exports = {
 	core_ctrl_get_state,
 	core_ctrl_get_states
-}
+};

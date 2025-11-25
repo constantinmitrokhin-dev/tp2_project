@@ -28,6 +28,7 @@ class CoreState extends CoreObject {
 				country_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
+					unique: 'state_iso2_name_code',
 					validate: {
 						notNull: {
 							msg: `core_state.country_id: ${ERR_NOT_NULL}`
@@ -52,7 +53,7 @@ class CoreState extends CoreObject {
 				name: {
 					type: DataTypes.STRING,
 					allowNull: false,
-					unique: true,
+					unique: 'state_iso2_name_code',
 					validate: {
 						notNull: {
 							msg: `core_state.name: ${ERR_NOT_NULL}`
@@ -74,7 +75,7 @@ class CoreState extends CoreObject {
 				iso2: {
 					type: DataTypes.STRING,
 					allowNull: false,
-					unique: true,
+					unique: 'state_iso2_name_code',
 					validate: {
 						notNull: {
 							msg: `core_state.iso2: ${ERR_NOT_NULL}`

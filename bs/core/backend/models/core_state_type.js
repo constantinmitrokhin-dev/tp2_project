@@ -26,30 +26,12 @@ class CoreStateType extends CoreType {
 				name: {
 					type: DataTypes.STRING,
 					allowNull: false,
-					unique: 'kind_name_business_id',
 					validate: {
 						notNull: {
 							msg: `core_state_type.name: ${ERR_NOT_NULL}`
 						}
 					},
 					field: 'name'
-				},
-				kind: {
-					type: DataTypes.STRING,
-					allowNull: true,
-					unique: 'kind_name_business_id',
-					field: 'kind'
-				},
-				business_id: {
-					type: DataTypes.INTEGER,
-					allowNull: false,
-					unique: 'kind_name_business_id',
-					validate: {
-						notNull: {
-							msg: `core_state_type.business_id: ${ERR_NOT_NULL}`
-						}
-					},
-					field: 'business_id'
 				}
 			},
 			{
@@ -72,8 +54,6 @@ class CoreStateType extends CoreType {
 							instance.id          = parent.id;
 							instance.ht_data     = parent.ht_data;
 							instance.name        = parent.name;
-							instance.kind        = parent.kind;
-							instance.business_id = parent.business_id;
 						} catch (error) {
 							console.error('Error creando CoreType para CoreStateType:', error);
 							throw new Error('Error creando CoreType para CoreStateType:');

@@ -34,23 +34,6 @@ class CoreType extends CoreObject {
 						}
 					},
 					field: 'name'
-				},
-				kind: {
-					type: DataTypes.STRING,
-					allowNull: true,
-					unique: 'kind_name_business_id',
-					field: 'kind'
-				},
-				business_id: {
-					type: DataTypes.INTEGER,
-					allowNull: false,
-					unique: 'kind_name_business_id',
-					validate: {
-						notNull: {
-							msg: `core_type.business_id: ${ERR_NOT_NULL}`
-						}
-					},
-					field: 'business_id'
 				}
 			},
 			{
@@ -58,13 +41,6 @@ class CoreType extends CoreObject {
 				modelName: 'CoreType',
 				tableName: 'core_type',
 				timestamps: false,
-				indexes: [
-					{
-						name: 'kind_name_business_id',
-						unique: true,
-						fields: ['name', 'business_id', 'kind']
-					}
-				],
 				relationships: {
 					type: 'inheritance',
 					parent: CoreObject,

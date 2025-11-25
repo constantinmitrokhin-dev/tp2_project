@@ -3,6 +3,7 @@ const {
 	core_svc_user_find_by_id,
 	core_svc_user_create,
 	core_svc_user_find_active_by_user_name_or_email,
+	core_svc_user_exists_by_user_name_or_email,
 	core_svc_user_update,
 	core_svc_user_delete } = require('../services/svc_CoreUser');
 const { core_mdlw_validate_required_fields } = require('./mdlw_validate_format');
@@ -22,14 +23,8 @@ const {
 	MDLW_ERR_INVALID_CURRENT_PASSWORD,
 	MDLW_ERR_PASSWORD_UPDATE_FAILED,
 	MDLW_ERR_USER_DELETE_FAILED } = require('./utils/msgs_error');
+const CoreUser = require('../models/core_user.js');
 
-
-
-const checkUserExists = async (user_name, email) => {
-	const v_existing_user = await core_svc_user_find_active_by_user_name_or_email(user_name);
-	const v_existing_email = await core_svc_user_find_active_by_user_name_or_email(email);
-	return !!(v_existing_user || v_existing_email);
-};
 
 const createAndActivateUser = async ({ name, middle_name, last_name, user_name, email, password }) => {
 	const v_new_user = await core_svc_user_create(
@@ -117,19 +112,15 @@ const updateUserData = async (user, updateData) => {
 //* ===============================================
 
 const core_mdlw_validate_user_id = async (req, res, next) => {
-	try {
-		const v_user = await core_svc_user_find_by_id(req.validatedId);
-		if (!v_user) {
-			return res.status(404).json({
-				status: 404,
-				message: MDLW_ERR_USER_ID_NOT_FOUND
-			});
-		}
-		req.user = v_user;
-		next();
-	} catch (error) {
-		next(error);
+	const v_user = await core_svc_user_find_by_id(req.validatedId);
+	if (!v_user) {
+		return res.status(404).json({
+			status: 404,
+			message: MDLW_ERR_USER_ID_NOT_FOUND
+		});
 	}
+	req.user = v_user;
+	next();
 };
 
 
@@ -138,6 +129,10 @@ const core_mdlw_validate_user_id = async (req, res, next) => {
  */
 const core_mdlw_validate_registration_fields = (req, res, next) => {
 	const requiredFields = ['name', 'last_name', 'user_name', 'email', 'password'];
+	const incomingFields = Object.keys(req.body).map(key => ({
+		[key]: req.body[key]
+	}));
+	console.log();
 	
 	if (!core_mdlw_validate_required_fields(req.body, requiredFields)) {
 		return res.status(400).json({
@@ -145,7 +140,7 @@ const core_mdlw_validate_registration_fields = (req, res, next) => {
 			message: MDLW_ERR_USER_MISSING_FIELDS
 		});
 	}
-	
+
 	next();
 };
 
@@ -157,7 +152,7 @@ const core_mdlw_check_user_uniqueness = async (req, res, next) => {
 	try {
 		const { user_name, email } = req.body;
 		
-		const userExists = await checkUserExists(user_name, email);
+		const userExists = await core_svc_user_exists_by_user_name_or_email(user_name, email);
 		
 		if (userExists) {
 			return res.status(409).json({
@@ -179,7 +174,6 @@ const core_mdlw_check_user_uniqueness = async (req, res, next) => {
 const core_mdlw_create_user = async (req, res, next) => {
 	try {
 		const { name, middle_name, last_name, user_name, email, password } = req.body;
-		
 		const v_new_user = await createAndActivateUser({
 			name,
 			middle_name,
@@ -194,11 +188,10 @@ const core_mdlw_create_user = async (req, res, next) => {
 		next();
 	} catch (error) {
 		const sequelizeError = handleSequelizeError(error);
-		
 		if (sequelizeError) {
 			return res.status(sequelizeError.status).json(sequelizeError);
 		}
-		
+
 		// Si no es error de Sequelize, verificar si es el error personalizado
 		if (error.message === MDLW_ERR_USER_REGISTRATION_FAILED) {
 			return res.status(500).json({
@@ -206,7 +199,6 @@ const core_mdlw_create_user = async (req, res, next) => {
 				message: error.message
 			});
 		}
-		
 		next(error);
 	}
 };
@@ -214,9 +206,7 @@ const core_mdlw_create_user = async (req, res, next) => {
 
 const core_mdlw_register_user = async (req, res, next) => {
 	try {
-		// Validar campos requeridos
-		const requiredFields = ['name', 'last_name', 'user_name', 'email', 'password'];
-		if (!core_mdlw_validate_required_fields(req.body, requiredFields)) {
+		if (!core_mdlw_validate_required_fields(req.body, CoreUser.getRequiredFields())) {
 			return res.status(400).json({
 				status: 400,
 				message: MDLW_ERR_USER_MISSING_FIELDS
@@ -224,8 +214,9 @@ const core_mdlw_register_user = async (req, res, next) => {
 		}
 
 		// Verificar que el usuario no exista
-		const { user_name, email } = req.body;
-		const userExists = await checkUserExists(user_name, email);
+		const { user_name, email, name, middle_name, last_name, password } = req.body;
+		const userExists = await core_svc_user_exists_by_user_name_or_email(user_name, email);
+
 		if (userExists) {
 			return res.status(409).json({
 				status: 409,
@@ -233,34 +224,20 @@ const core_mdlw_register_user = async (req, res, next) => {
 			});
 		}
 
-		// Crear y activar el usuario
-		const { name, middle_name, last_name, password } = req.body;
-		const v_new_user = await createAndActivateUser({
-			name,
-			middle_name,
-			last_name,
-			user_name,
-			email,
-			password
-		});
-
 		// Adjuntar el usuario creado al request
-		req.registeredUser = v_new_user;
+		req.user = await core_svc_user_create( {name, middle_name, last_name, user_name, email, password} );
 		next();
 	} catch (error) {
 		const sequelizeError = handleSequelizeError(error);
-		
 		if (sequelizeError) {
 			return res.status(sequelizeError.status).json(sequelizeError);
 		}
-		
 		if (error.message === MDLW_ERR_USER_REGISTRATION_FAILED) {
 			return res.status(500).json({
 				status: 500,
 				message: error.message
 			});
 		}
-		
 		next(error);
 	}
 };
@@ -361,8 +338,8 @@ const core_mdlw_login_user = async (req, res, next) => {
 
 		// Buscar usuario activo
 		const { login, password } = req.body;
-		const v_user = await findActiveUser(login);
-		
+		const v_user = await core_svc_user_find_active_by_user_name_or_email(login);
+
 		if (!v_user) {
 			return res.status(401).json({
 				status: 401,
@@ -371,8 +348,7 @@ const core_mdlw_login_user = async (req, res, next) => {
 		}
 
 		// Verificar contraseña
-		const isPasswordValid = await validateUserPassword(v_user, password);
-		
+		const isPasswordValid = await v_user.comparePassword(password);
 		if (!isPasswordValid) {
 			return res.status(401).json({
 				status: 401,
@@ -381,8 +357,8 @@ const core_mdlw_login_user = async (req, res, next) => {
 		}
 
 		// Generar token JWT
-		const token = await generateUserToken(v_user);
-		
+		const token = await v_user.createJwt();;
+
 		if (!token) {
 			return res.status(500).json({
 				status: 500,
@@ -391,8 +367,8 @@ const core_mdlw_login_user = async (req, res, next) => {
 		}
 
 		// Adjuntar usuario y token al request
-		req.authenticatedUser = v_user;
-		req.token = token;
+		req.v_user = v_user;
+		req.cokies = token;
 		next();
 	} catch (error) {
 		next(error);
@@ -443,30 +419,26 @@ const core_mdlw_check_update_uniqueness = async (req, res, next) => {
 const core_mdlw_update_user_data = async (req, res, next) => {
 	try {
 		const updatedUser = await updateUserData(req.user, req.updatableData);
-		
+
 		if (!updatedUser) {
 			return res.status(500).json({
 				status: 500,
 				message: MDLW_ERR_USER_UPDATE_FAILED
 			});
 		}
-		
-		req.updatedUser = updatedUser;
+		req.user = updatedUser;
 		next();
 	} catch (error) {
 		const sequelizeError = handleSequelizeError(error);
-		
 		if (sequelizeError) {
 			return res.status(sequelizeError.status).json(sequelizeError);
 		}
-		
 		if (error.message === MDLW_ERR_USER_UPDATE_FAILED) {
 			return res.status(500).json({
 				status: 500,
 				message: error.message
 			});
 		}
-		
 		next(error);
 	}
 };
@@ -624,7 +596,6 @@ module.exports = {
 	
 	// Funciones auxiliares (reutilizables)
 	core_mdlw_validate_required_fields,
-	checkUserExists,
 	createAndActivateUser,
 	handleSequelizeError,
 	findActiveUser,

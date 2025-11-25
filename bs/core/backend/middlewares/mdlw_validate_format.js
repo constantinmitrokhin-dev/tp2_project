@@ -35,7 +35,6 @@ const core_mdlw_validate_text_search_format = (req, res, next) => {
 			message: MDLW_ERR_TEXT_VALIDATION
 		});
 	}
-
 	req.validatedText = formatedText;
 	next();
 }

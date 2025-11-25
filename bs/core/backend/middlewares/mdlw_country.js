@@ -61,6 +61,25 @@ const core_mdlw_validate_countries_by_text = async (req, res, next) => {
 };
 
 
+const core_mdlw_validate_countries_by_country_name = async (req, res, next) => {
+	try {
+		const { country } = req.query;
+
+		const v_country = await core_svc_country_find_by_name(country);
+		if (!v_country) {
+			return res.status(404).json({
+				status: 404,
+				message: MDLW_ERR_COUNTRY_NAME_NOT_FOUND
+			});
+		}
+		req.country = v_country;
+		next();
+	} catch (error) {
+		next(error);
+	}
+};
+
+
 const core_mdlw_validate_countries_by_name = async (req, res, next) => {
 	try {
 		const v_country = await core_svc_country_find_by_name(req.validatedText);
@@ -82,5 +101,6 @@ module.exports = {
 	core_mdlw_validate_country_id,
 	core_mdlw_validate_countries,
 	core_mdlw_validate_countries_by_text,
+	core_mdlw_validate_countries_by_country_name,
 	core_mdlw_validate_countries_by_name
 }

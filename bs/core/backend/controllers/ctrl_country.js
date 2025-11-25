@@ -22,4 +22,4 @@ const core_ctrl_get_countries = (req, res) => {
 module.exports = {
 	core_ctrl_get_country,
 	core_ctrl_get_countries
-}
+};
