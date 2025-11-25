@@ -118,6 +118,12 @@ class CoreBusiness extends CoreObject {
 			}
 		);
 	}
+
+
+	static getRequiredFields() {
+		return ['country_id', 'fiscal_code', 'url_name', 'trade_name', 'register_name'];
+	}
 }
+
 
 module.exports = CoreBusiness;

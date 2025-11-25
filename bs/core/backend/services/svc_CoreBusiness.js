@@ -1,11 +1,21 @@
 
 const { Op } = require('sequelize');
 const CoreBusiness = require('../models/core_business');
+const CoreBusinessLocation = require('../models/core_business_location');
 
 
 //* Find a CoreBusiness by its primary key (ID)
 const core_svc_business_find_by_id = async (p_business_id) => {
-	return await CoreBusiness.findByPk(p_business_id);
+	return await CoreBusiness.findByPk(
+		p_business_id,
+		{
+			include: [
+				{
+					model: CoreBusinessLocation,
+					as: 'businessLocation'
+				}
+			]
+		});
 }
 
 
@@ -14,7 +24,13 @@ const core_svc_business_find_by_url_name = async (p_url_name) => {
 	return await CoreBusiness.findOne({
 		where: {
 			url_name: p_url_name
-		}
+		},
+		include: [
+			{
+				model: CoreBusinessLocation,
+				as: 'businessLocation'
+			}
+		]
 	});
 }
 

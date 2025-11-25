@@ -83,6 +83,11 @@ class CoreProductType extends CoreType {
 			}
 		);
 	}
+
+
+	static getRequiredFields() {
+		return ['name', 'business_id'];
+	}
 }
 
 
