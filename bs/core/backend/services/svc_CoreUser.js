@@ -13,6 +13,24 @@ const core_svc_user_find_active_by_user_name_or_email = async (p_login_input) =>
 }
 
 
+//* Validate User existance
+const core_svc_user_exists_by_user_name_or_email = async (p_user_name, p_email) => {
+	const user = await CoreUser.findOne({
+		where: {
+			[Op.or]: [
+				{ user_name: p_user_name },
+				{ email: p_email }
+			]
+		}
+	});
+	console.log('Entra 3');
+	
+console.log(user);
+
+	return !!user;
+};
+
+
 //* Find a CoreUser by its primary key (ID)
 const core_svc_user_find_by_id = async (p_user_id) => {
 	return await CoreUser.findByPk(p_user_id);
@@ -20,16 +38,8 @@ const core_svc_user_find_by_id = async (p_user_id) => {
 
 
 //* Create a new CoreUser record with the provided data
-const core_svc_user_create = async (p_name, p_middle_name = null, p_last_name, p_user_name, p_email, p_password) => {
-	return await CoreUser.create(
-		{
-			name:        p_name,
-			middle_name: p_middle_name,
-			last_name:   p_last_name,
-			user_name:   p_user_name,
-			email:       p_email,
-			password:    p_password
-		});
+const core_svc_user_create = async ({name, middle_name = null, last_name, user_name, email, password}) => {
+	return await CoreUser.create({ name, middle_name, last_name, user_name, email, password });
 }
 
 
@@ -48,6 +58,7 @@ const core_svc_user_delete = async (p_user) => {
 
 module.exports = {
 	core_svc_user_find_active_by_user_name_or_email,
+	core_svc_user_exists_by_user_name_or_email,
 	core_svc_user_find_by_id,
 	core_svc_user_create,
 	core_svc_user_update,

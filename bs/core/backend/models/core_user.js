@@ -204,6 +204,11 @@ class CoreUser extends CoreObject {
 		this.status = USER_STATUS_ENUM[1];
 		return await this.save();
 	}
+
+
+	static getRequiredFields() {
+		return ['name', 'last_name', 'user_name', 'email', 'password'];
+	}
 }
 
 

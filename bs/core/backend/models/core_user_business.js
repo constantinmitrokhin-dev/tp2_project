@@ -72,6 +72,11 @@ class CoreUserBusiness extends CoreObject {
 		);
 		return this;
 	}
+
+
+	static getRequiredFields() {
+		return ['user_id', 'business_id'];
+	}
 }
 
 

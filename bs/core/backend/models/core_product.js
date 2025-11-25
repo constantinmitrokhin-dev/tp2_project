@@ -123,6 +123,12 @@ class CoreProduct extends CoreObject {
 			}
 		);
 	}
+
+
+	static getRequiredFields() {
+		return ['type_id', 'business_id', 'name'];
+	}
 }
+
 
 module.exports = CoreProduct;

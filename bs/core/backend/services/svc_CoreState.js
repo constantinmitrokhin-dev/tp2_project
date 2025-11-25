@@ -1,6 +1,7 @@
 
 const CoreState = require('../models/core_state');
 const CoreStateType = require('../models/core_state_type');
+const { Op } = require('sequelize');
 
 
 ///* Find every valid CoreState
@@ -10,7 +11,8 @@ const core_svc_state_get_all_by_country_id = async (p_country_id) => {
 		include: [
 			{
 				model: CoreStateType,
-				as: 'state_type',
+				as: 'type',
+				attributes: { exclude: ['id', 'ht_data'] }
 			}
 		]
 	});
@@ -18,15 +20,18 @@ const core_svc_state_get_all_by_country_id = async (p_country_id) => {
 
 
 //* Find a CoreState by its primary key (ID)
-const core_svc_state_find_by_id = async (p_country_id) => {
-	return await CoreState.findByPk(p_country_id,
+const core_svc_state_find_by_id = async (p_state_id) => {
+	return await CoreState.findByPk(p_state_id,
 		{
 			include: [
-			{
-				model: CoreStateType,
-				as: 'state_type',
-			}
-		]});
+				{
+					model: CoreStateType,
+					as: 'type',
+					attributes: { exclude: ['id', 'ht_data'] }
+				}
+			]
+		}
+	);
 }
 
 
@@ -35,14 +40,13 @@ const core_svc_state_find_by_text = async (p_country_id, p_text) => {
 	return await CoreState.findAll({
 		where: {
 			country_id: p_country_id,
-			[Op.or]: [
-				{ name: { [Op.iLike]: `%${p_text}%` } },
-			]
+			name: { [Op.iLike]: `%${p_text}%` }
 		},
 		include: [
 			{
 				model: CoreStateType,
-				as: 'state_type',
+				as: 'type',
+				attributes: { exclude: ['id', 'ht_data'] }
 			}
 		]
 	});

@@ -4,7 +4,9 @@ const router = Router();
 const {
 	core_mdlw_validate_id_format,
 	core_mdlw_validate_text_search_format } = require('../../middlewares/mdlw_validate_format');
-const { core_mdlw_validate_country_id } = require('../../middlewares/mdlw_country');
+const {
+	core_mdlw_validate_country_id,
+	core_mdlw_validate_countries_by_country_name } = require('../../middlewares/mdlw_country');
 const {
 	core_mdlw_validate_state_id,
 	core_mdlw_validate_states,
@@ -17,7 +19,7 @@ const {
 //* State
 	// Get All States by country {id}
 router.get(
-	'/all',
+	'/all/:id',
 	core_mdlw_validate_id_format,
 	core_mdlw_validate_country_id,
 	core_mdlw_validate_states,
@@ -28,11 +30,10 @@ router.get(
 	// Get State´s by exact {name}
 router.get(
 	'/byName',
-	core_mdlw_validate_id_format,
 	core_mdlw_validate_text_search_format,
-	core_mdlw_validate_country_id,
+	core_mdlw_validate_countries_by_country_name,
 	core_mdlw_validate_state_by_text,
-	core_ctrl_get_state
+	core_ctrl_get_states
 );
 
 
