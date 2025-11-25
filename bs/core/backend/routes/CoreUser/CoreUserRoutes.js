@@ -14,6 +14,7 @@ const { core_ctrl_get_user } = require('../../controllers/ctrl_user.js');
 
 
 //* User
+	//* User Registration
 router.post(
 	'/register',
 	core_mdlw_register_user,
@@ -21,15 +22,14 @@ router.post(
 );
 
 
-	// Login
+	//* User Login
 router.post(
 	'/login',
 	core_mdlw_login_user,
 	core_ctrl_get_user
 );
 
-
-	// Update User´s Data
+	//* Update User Data
 router.patch(
 	'/update/:id',
 	core_mdlw_validate_id_format,

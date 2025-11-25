@@ -129,11 +129,7 @@ const core_mdlw_validate_user_id = async (req, res, next) => {
  */
 const core_mdlw_validate_registration_fields = (req, res, next) => {
 	const requiredFields = ['name', 'last_name', 'user_name', 'email', 'password'];
-	const incomingFields = Object.keys(req.body).map(key => ({
-		[key]: req.body[key]
-	}));
-	console.log();
-	
+
 	if (!core_mdlw_validate_required_fields(req.body, requiredFields)) {
 		return res.status(400).json({
 			status: 400,
@@ -225,7 +221,10 @@ const core_mdlw_register_user = async (req, res, next) => {
 		}
 
 		// Adjuntar el usuario creado al request
-		req.user = await core_svc_user_create( {name, middle_name, last_name, user_name, email, password} );
+		const v_user = await core_svc_user_create( {name, middle_name, last_name, user_name, email, password} );
+		v_user.activateUser();
+		v_user.save();
+		req.user = v_user;
 		next();
 	} catch (error) {
 		const sequelizeError = handleSequelizeError(error);
@@ -339,7 +338,6 @@ const core_mdlw_login_user = async (req, res, next) => {
 		// Buscar usuario activo
 		const { login, password } = req.body;
 		const v_user = await core_svc_user_find_active_by_user_name_or_email(login);
-
 		if (!v_user) {
 			return res.status(401).json({
 				status: 401,
@@ -357,7 +355,8 @@ const core_mdlw_login_user = async (req, res, next) => {
 		}
 
 		// Generar token JWT
-		const token = await v_user.createJwt();;
+		const token = await v_user.createJwt();
+
 
 		if (!token) {
 			return res.status(500).json({
@@ -365,10 +364,11 @@ const core_mdlw_login_user = async (req, res, next) => {
 				message: MDLW_ERR_LOGIN_FAILED
 			});
 		}
+		v_user.save();
 
 		// Adjuntar usuario y token al request
-		req.v_user = v_user;
-		req.cokies = token;
+		req.user = v_user;
+		req.cookies = token;
 		next();
 	} catch (error) {
 		next(error);

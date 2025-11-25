@@ -23,6 +23,9 @@ const core_svc_user_exists_by_user_name_or_email = async (p_user_name, p_email) 
 			]
 		}
 	});
+	console.log('Entra 3');
+	
+console.log(user);
 
 	return !!user;
 };
