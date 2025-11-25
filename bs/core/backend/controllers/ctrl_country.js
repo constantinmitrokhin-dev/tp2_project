@@ -1,4 +1,9 @@
 
+///* ===============================================
+//*  CONTROLLERS COUNTRY
+//* ================================================
+
+
 const core_ctrl_get_country = (req, res) => {
 	const { ht_data, ...rest } = req.country.get({ plain: true });
 	return res.status(200).json({ country: rest });

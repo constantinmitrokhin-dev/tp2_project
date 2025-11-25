@@ -2,7 +2,6 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-// const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const routes = require('./routes/routes');
 const { PROJECT_NAME, ALLOWED_DOMAINS, ALLOWED_METHODS } = process.env;
@@ -21,11 +20,15 @@ server.use((req, res, next) => {
 	// eslint-disable-next-line max-len
 	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 	res.header('Access-Control-Allow-Methods', ALLOWED_METHODS);
+	// res.cookie('token', jwt, {
+	// 	httpOnly: true,
+	// 	secure: true,       // obligatorio en HTTPS
+	// 	sameSite: 'None'    // necesario si el frontend está en otro dominio
+	// });
 	next();
 });
 
 server.use('/', routes);
-
 
 server.get('/', (req, res) => {
 	res.send('Core service running 🚀');

@@ -139,4 +139,5 @@ class CoreCountry extends CoreObject {
 	}
 }
 
+
 module.exports = CoreCountry;

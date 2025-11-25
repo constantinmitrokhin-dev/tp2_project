@@ -30,4 +30,8 @@ module.exports = {
 	MDLW_ERR_PRODUCT_DELETE_FAILED: 'Product deletion failed. Please try again.',
 	MDLW_ERR_PRODUCTS_NOT_FOUND: 'Products not found.',
 	MDLW_ERR_BUSINESS_ID_REQUIRED: 'Business ID is required for product operations.',
+	MDLW_ERR_BUSINESS_ID_NOT_FOUND: 'Business not found. Please verify the provided business ID.',
+	MDLW_ERR_BUSINESS_URL_NAME_NOT_FOUND: 'Business not found. Please verify the provided URL name.',
+	MDLW_ERR_BUSINESS_ALREADY_EXISTS: 'Business already exists. The URL name or fiscal code is already registered.',
+	MDLW_ERR_BUSINESS_MISSING_FIELDS: 'Missing required fields. Please provide all required business information.',
 };

@@ -60,6 +60,7 @@ const core_mdlw_validate_state_by_text = async (req, res, next) => {
 	}
 };
 
+
 module.exports = {
 	core_mdlw_validate_state_id,
 	core_mdlw_validate_states,
